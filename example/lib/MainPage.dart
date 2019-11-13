@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:flutter_bluetooth_serial_example/src/pages/dashboard_page.dart';
+import 'package:flutter_bluetooth_serial_example/src/pages/profiles_dart.dart';
+import 'package:flutter_bluetooth_serial_example/src/pages/settings_page.dart';
+import 'package:flutter_bluetooth_serial_example/src/pages/stats_page.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import './DiscoveryPage.dart';
@@ -28,6 +32,17 @@ class _MainPage extends State<MainPage> {
   BackgroundCollectingTask _collectingTask;
 
   bool _autoAcceptPairingRequests = false;
+
+  int currentTab = 0;
+  final List<Widget> screens = [
+    DashboardPage(),
+    StatPage(),
+    ProfilePage(),
+    SettingPage()
+  ];
+  final PageStorageBucket bucket = PageStorageBucket();
+  Widget currentScreen = DashboardPage(); // Our first view in viewport
+
 
   @override
   void initState() {
@@ -80,211 +95,99 @@ class _MainPage extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Bluetooth Serial'),
+        backgroundColor: Color.fromRGBO(250, 250, 250, 1),
+        brightness: Brightness.light,
+        elevation: 0,
       ),
-      body: Container(
-        child: ListView(
-          children: <Widget>[
-            Divider(),
-            ListTile(
-              title: const Text('General')
-            ),
-            SwitchListTile(
-              title: const Text('Enable Bluetooth'),
-              value: _bluetoothState.isEnabled,
-              onChanged: (bool value) {
-                // Do the request and update with the true value then
-                future() async { // async lambda seems to not working
-                  if (value)
-                    await FlutterBluetoothSerial.instance.requestEnable();
-                  else
-                    await FlutterBluetoothSerial.instance.requestDisable();
-                }
-                future().then((_) {
-                  setState(() {});
-                });
-              },
-            ),
-            ListTile(
-              title: const Text('Bluetooth status'),
-              subtitle: Text(_bluetoothState.toString()),
-              trailing: RaisedButton(
-                child: const Text('Settings'),
-                onPressed: () { 
-                  FlutterBluetoothSerial.instance.openSettings();
-                },
-              ),
-            ),
-            ListTile(
-              title: const Text('Local adapter address'),
-              subtitle: Text(_address),
-            ),
-            ListTile(
-              title: const Text('Local adapter name'),
-              subtitle: Text(_name),
-              onLongPress: null,
-            ),
-            ListTile(
-              title: _discoverableTimeoutSecondsLeft == 0 ? const Text("Discoverable") : Text("Discoverable for ${_discoverableTimeoutSecondsLeft}s"),
-              subtitle: const Text("PsychoX-Luna"),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Checkbox(
-                    value: _discoverableTimeoutSecondsLeft != 0,
-                    onChanged: null,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: null,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: () async {
-                      print('Discoverable requested');
-                      final int timeout = await FlutterBluetoothSerial.instance.requestDiscoverable(60);
-                      if (timeout < 0) {
-                        print('Discoverable mode denied');
-                      }
-                      else {
-                        print('Discoverable mode acquired for $timeout seconds');
-                      }
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.play_arrow),
+        onPressed: (){},
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 10,
+        child: Container(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  MaterialButton(
+                    onPressed: () {
                       setState(() {
-                        _discoverableTimeoutTimer?.cancel();
-                        _discoverableTimeoutSecondsLeft = timeout;
-                        _discoverableTimeoutTimer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-                          setState(() {
-                            if (_discoverableTimeoutSecondsLeft < 0) {
-                              FlutterBluetoothSerial.instance.isDiscoverable.then((isDiscoverable) {
-                                if (isDiscoverable) {
-                                  print("Discoverable after timeout... might be infinity timeout :F");
-                                  _discoverableTimeoutSecondsLeft += 1;
-                                }
-                              });
-                              timer.cancel();
-                              _discoverableTimeoutSecondsLeft = 0;
-                            }
-                            else {
-                              _discoverableTimeoutSecondsLeft -= 1;
-                            }
-                          });
-                        });
+                        currentScreen = DashboardPage(); // if user taps on this dashboard tab will be active
+                        currentTab = 0;
                       });
                     },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.dashboard, color: currentTab == 0 ? Colors.blue : Colors.grey,),
+                      ],
+                    ),
+                  ),
+                  MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        currentScreen = StatPage(); // if user taps on this dashboard tab will be active
+                        currentTab = 1;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.bubble_chart, color: currentTab == 1 ? Colors.blue : Colors.grey,),
+                      ],
+                    ),
                   )
-                ]
+                ],
+              ),
+
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        currentScreen = ProfilePage(); // if user taps on this dashboard tab will be active
+                        currentTab = 2;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.people,color: currentTab == 2 ? Colors.blue : Colors.grey,),
+                      ],
+                    ),
+                  ),
+                  MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        currentScreen = SettingPage(); // if user taps on this dashboard tab will be active
+                        currentTab = 3;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.settings_bluetooth,color: currentTab == 3 ? Colors.blue : Colors.grey,),
+                      ],
+                    ),
+                  )
+                ],
               )
-            ),
-
-            Divider(),
-            ListTile(
-              title: const Text('Devices discovery and connection')
-            ),
-            SwitchListTile(
-              title: const Text('Auto-try specific pin when pairing'),
-              subtitle: const Text('Pin 1234'),
-              value: _autoAcceptPairingRequests,
-              onChanged: (bool value) {
-                setState(() {
-                  _autoAcceptPairingRequests = value;
-                });
-                if (value) {
-                  FlutterBluetoothSerial.instance.setPairingRequestHandler((BluetoothPairingRequest request) {
-                    print("Trying to auto-pair with Pin 1234");
-                    if (request.pairingVariant == PairingVariant.Pin) {
-                      return Future.value("1234");
-                    }
-                    return null;
-                  });
-                }
-                else {
-                  FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
-                }
-              },
-            ),
-            ListTile(
-              title: RaisedButton(
-                child: const Text('Explore discovered devices'),
-                onPressed: () async {
-                  final BluetoothDevice selectedDevice = await Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) { return DiscoveryPage(); })
-                  );
-
-                  if (selectedDevice != null) {
-                    print('Discovery -> selected ' + selectedDevice.address);
-                  }
-                  else {
-                    print('Discovery -> no device selected');
-                  }
-                }
-              ),
-            ),
-            ListTile(
-              title: RaisedButton(
-                child: const Text('Connect to paired device to chat'),
-                onPressed: () async {
-                  final BluetoothDevice selectedDevice = await Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) { return SelectBondedDevicePage(checkAvailability: false); })
-                  );
-
-                  if (selectedDevice != null) {
-                    print('Connect -> selected ' + selectedDevice.address);
-                    _startChat(context, selectedDevice);
-                  }
-                  else {
-                    print('Connect -> no device selected');
-                  }
-                },
-              ),
-            ),
-
-            Divider(),
-            ListTile(
-              title: const Text('Multiple connections example')
-            ),
-            ListTile(
-              title: RaisedButton(
-                child: (
-                  (_collectingTask != null && _collectingTask.inProgress) 
-                  ? const Text('Disconnect and stop background collecting')
-                  : const Text('Connect to start background collecting') 
-                ),
-                onPressed: () async {
-                  if (_collectingTask != null && _collectingTask.inProgress) {
-                    await _collectingTask.cancel();
-                    setState(() {/* Update for `_collectingTask.inProgress` */});
-                  }
-                  else {
-                    final BluetoothDevice selectedDevice = await Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) { return SelectBondedDevicePage(checkAvailability: false); })
-                    );
-
-                    if (selectedDevice != null) {
-                      await _startBackgroundTask(context, selectedDevice);
-                      setState(() {/* Update for `_collectingTask.inProgress` */});
-                    }
-                  }
-                },
-              ),
-            ),
-            ListTile(
-              title: RaisedButton(
-                child: const Text('View background collected data'),
-                onPressed: (_collectingTask != null) ? () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) {
-                      return ScopedModel<BackgroundCollectingTask>(
-                        model: _collectingTask,
-                        child: BackgroundCollectedPage(),
-                      );
-                    })
-                  );
-                } : null,
-              )
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+      body: PageStorage(
+        child: currentScreen,
+        bucket: bucket,
+      )
+        
     );
   }
 

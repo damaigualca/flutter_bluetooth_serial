@@ -1,0 +1,75 @@
+CREATE TABLE "ENFERMEDADES" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"nombre"	TEXT
+);
+
+CREATE TABLE "UNIDADES_ATENCION" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"nombre_unidad"	TEXT,
+	"canton"	TEXT,
+	"parroquia"	TEXT,
+	"sector"	TEXT,
+	"tecnico_encargado"	TEXT,
+	"celular_tecnico"	TEXT,
+	"correo"	TEXT
+);
+
+CREATE TABLE "PERSONAS" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"nombres"	TEXT,
+	"apellidos"	TEXT,
+	"cedula"	TEXT,
+	"sexo"	TEXT,
+	"telefonoContacto"	TEXT,
+	"direccion"	TEXT,
+	"fecha_nacimiento"	TEXT,
+	"etnia"	TEXT,
+	"vive_con"	TEXT,
+	"tipo_casa"	TEXT,
+	"tipo_vivienda"	TEXT,
+	"estructura_vivienda"	TEXT,
+	"via_acceso"	BIT NOT NULL,
+	"posee_discapacidad" BIT NOT NULL,
+	"tipo_servicio"	TEXT,
+	"posee_carnet_discapacidad" BIT NOT NULL,
+	"id_unidad_atencion"	INTEGER,
+	FOREIGN KEY("id_unidad_atencion") REFERENCES UNIDADES_ATENCION("id")
+);
+
+CREATE TABLE "DISCAPACIDADES" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"name"	TEXT
+);
+
+CREATE TABLE "DISCAPACIDAD_PERSONA" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"porcentaje"	REAL,
+	"id_discapacidad"	INTEGER,
+	"id_persona"	INTEGER,
+	FOREIGN KEY("id_discapacidad") REFERENCES DISCAPACIDADES("id"),
+	FOREIGN KEY("id_persona") REFERENCES PERSONAS("id")
+);
+CREATE TABLE "ENFERMEDAD_PERSONA" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"nivel_enfermedad" TEXT,
+	"tipo_tratamiento" TEXT,
+	"recomendacion" TEXT,
+	"lugar_atencion" TEXT,
+	"id_enfermedad"	INTEGER,
+	"id_persona"	INTEGER,
+	FOREIGN KEY("id_enfermedad") REFERENCES ENFERMEDADES("id"),
+	FOREIGN KEY("id_persona") REFERENCES PERSONAS("id")
+);
+
+CREATE TABLE "TERAPIAS" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"fecha"	TEXT,
+	"tipo_terapia"	TEXT,
+	"repeticiones_asignadas"	INTEGER,
+	"observaciones"	TEXT,
+	"completado"	BIT NOT NULL,
+	"tiempo_empleado"	TEXT,
+	"repeticiones_correctas"	INTEGER,
+	"id_persona"	INTEGER,
+	FOREIGN KEY("id_persona") REFERENCES PERSONAS("id")
+);
