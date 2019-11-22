@@ -38,16 +38,17 @@ CREATE TABLE "PERSONAS" (
 
 CREATE TABLE "DISCAPACIDADES" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	"name"	TEXT
+	"nombre"	TEXT
 );
 
 CREATE TABLE "DISCAPACIDAD_PERSONA" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	"porcentaje"	REAL,
+	"descripcion"	TEXT,
 	"id_discapacidad"	INTEGER,
 	"id_persona"	INTEGER,
-	FOREIGN KEY("id_discapacidad") REFERENCES DISCAPACIDADES("id"),
-	FOREIGN KEY("id_persona") REFERENCES PERSONAS("id")
+	FOREIGN KEY("id_discapacidad") REFERENCES "DISCAPACIDADES"("id"),
+	FOREIGN KEY("id_persona") REFERENCES "PERSONAS"("id")
 );
 CREATE TABLE "ENFERMEDAD_PERSONA" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -70,6 +71,201 @@ CREATE TABLE "TERAPIAS" (
 	"completado"	BIT NOT NULL,
 	"tiempo_empleado"	TEXT,
 	"repeticiones_correctas"	INTEGER,
+	"repeticiones_fallidas"	INTEGER,
 	"id_persona"	INTEGER,
-	FOREIGN KEY("id_persona") REFERENCES PERSONAS("id")
+	FOREIGN KEY("id_persona") REFERENCES "PERSONAS"("id")
 );
+
+INSERT INTO ENFERMEDADES(nombre) VALUES ('Artritis');
+INSERT INTO ENFERMEDADES(nombre) VALUES ('Artrosis');
+INSERT INTO ENFERMEDADES(nombre) VALUES ('Tendinitis');
+
+INSERT INTO DISCAPACIDADES(nombre) VALUES ('Intelectual');
+INSERT INTO DISCAPACIDADES(nombre) VALUES ('Visual');
+INSERT INTO DISCAPACIDADES(nombre) VALUES ('Auditiva');
+INSERT INTO DISCAPACIDADES(nombre) VALUES ('Fisica');
+INSERT INTO DISCAPACIDADES(nombre) VALUES ('Mental');
+INSERT INTO DISCAPACIDADES(nombre) VALUES ('Lenguaje');
+
+
+INSERT INTO UNIDADES_ATENCION(nombre_unidad, canton, parroquia, sector, tecnico_encargado, celular_tecnico, correo) VALUES 
+('La Delicia', 'Salcedo', 'Panzaleo', 'Panzaleo', 'Fernando Hidalgo', '0987771808', '');
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Elbina Marina', 'Angulo', '1800943209', 'Femenino', '', 'Camino viejo a Yambo', '1951-01-01', 'Mestizo', 'Cónyuge', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Enrique Jaime', 'Angulo Quispe', '1200273074', 'Masculino', '', 'Entrada a Jacho', '1941-01-01', 'Mestizo', 'Solo/a', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Mariana Lucita', 'Bustos Chiliquinga', '0500646703', 'Femenino', '', 'Entrada a Patain', '1932-01-01', 'Mestizo', 'Cónyuge', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Margarita de Jesús', 'Acosta Gavilanes', '0500475918', 'Femenino', '', 'Centro de Patain', '1951-01-01', 'Mestizo', 'Hijo/a', 1, 0, 0, 1);
+
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Enrique Jaime', 'Angulo Quispe', '1200273074', 'Masculino', '', 'Entrada a Jacho', '1941-01-01', 'Mestizo', 'Solo/a', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Mariana Lucita', 'Bustos Chiliquinga', '0500646703', 'Femenino', '', 'Entrada a Jacho', '1932-01-01', 'Mestizo', 'Hijo/a', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Zoila Mariana', 'Caisa Quispe', '180073742', 'Femenino', '', 'Camino viejo a Yambo', '1945-01-01', 'Mestizo', 'Cónyuge', 1, 0, 0, 1);
+
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Mariana Carmelina', 'Caisalitin Quispe', '', 'Femenino', '', 'Entrada a Jacho', '1950-01-01', 'Mestizo', 'Cónyuge', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Luz Evangelina', 'Chiliquinga Guato', '', 'Femenino', '', 'Via Jacho', '1941-01-01', 'Mestizo', 'Solo/a', 1, 1, 1, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Maria Teresa', 'Chiliquinga', '0500532155', 'Femenino', '', 'Camino viejo a Yambo', '1947-01-01', 'Mestizo', 'Hijo/a', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Jesús Humbelina', 'Chiliquinga Peralta', '0500291232', 'Femenino', '', 'Centro de Patain', '1944-01-01', 'Mestizo', 'Hijo/a', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Ubaldino', 'Chiliquinga Guato', '', 'Masculino', '', 'Centro de Patain', '1941-01-01', 'Mestizo', 'Solo/a', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Jose Enrique', 'Cunalata Guato', '0500225362', 'Masculino', '', 'Centro de Patain', '1937-01-01', 'Mestizo', 'Solo/a', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Ezequiel', 'Espín Benacio', '1800094433', 'Masculino', '', 'La cruz de Ulivi', '1932-01-01', 'Mestizo', 'Solo/a', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Mariana Celinda', 'Gavilanes Taipe', '1800680785', 'Femenino', '', 'La cruz de Uluvi', '1940-01-01', 'Mestizo', 'Cónyuge', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('José Misael', 'Guato Chiliquinga', '1000532547', 'Masculino', '', 'Camino viejo a Yambo', '1948-01-01', 'Mestizo', 'Cónyuge', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Juan Amador', 'Hernandez Guapisaca', '1800073759', 'Masculino', '', 'Via Jacho Uluvi', '1949-01-01', 'Mestizo', 'Cónyuge', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Dora Avigael', 'Larcos Naranjo', '0500537451', 'Femenino', '', 'Centro de Jacho', '1951-01-01', 'Mestizo', 'Cónyuge', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Rosa Eldemira', 'Lasluisa Tonato', '1800574970', 'Femenino', '', 'Camino viejo a Yambo', '1953-01-01', 'Mestizo', 'Cónyuge', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Juan', 'Llasag Aguayo', '1700158643', 'Masculino', '', 'Via Jacho Uluvi', '1936-01-01', 'Mestizo', 'Cónyuge', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Julio Enrique', 'Maliiquinga Malliquinga', '1800131540', 'Masculino', '', 'Centro de Jacho', '1943-01-01', 'Mestizo', 'Nieto/a', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('María Olga', 'Malliquinga Malliquinga', '0500236997', 'Femenino', '', 'Centro de Jacho', '1932-01-01', 'Mestizo', 'Hijo/a', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Teresa', 'Malliquinga Malliquinga', '0500973706', 'Femenino', '', 'Via Jacho Uluvi', '1934-01-01', 'Mestizo', 'Cónyuge', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Zoila Rosario', 'Ortega', '0500057237', 'Femenino', '', 'Via Jacho Uluvi', '1939-01-01', 'Mestizo', 'Solo/a', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Julio Cesar', 'Peralta Malliquinga', '0500310453', 'Masculino', '', 'Via Jacho Tigualo', '1940-01-01', 'Mestizo', 'Solo/a', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('María Graciela', 'Porras Villacís', '1800840074', 'Femenino', '', 'Afueras de Patain', '1950-01-01', 'Mestizo', 'Familia', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Rafaela Florinda', 'Pulluquitin Pulluquitin', '0500966585', 'Femenino', '', 'Patain', '1945-01-01', 'Mestizo', 'Hermano/a', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Victor Alfonso', 'Pulluquitin Pulluquitin', '0500485693', 'Masculino', '', 'Patain', '1950-01-01', 'Mestizo', 'Hermano/a', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('María Teodolina', 'Quispe Chiliquinga', '0501063317', 'Femenino', '', 'Patain', '1930-01-01', 'Mestizo', 'Cónyuge', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Blanca Elisa', 'Ramón Bustos', '0501020614', 'Femenino', '', 'Via Jacho Tigualo', '1953-01-01', 'Mestizo', 'Hijo/a', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Hilda Marina', 'Ruiz Veloz', '1800845545', 'Femenino', '', 'Camino viejo a Yambo', '1951-01-01', 'Mestizo', 'Familia', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Neris Alberto', 'Villacís Peralta', '0500067885', 'Masculino', '', 'Camino a Yambo', '1942-01-01', 'Mestizo', 'Cónyuge', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Judit Emilia', 'Suarez Viscano', '0501211173', 'Femenino', '', 'Via Jacho Tigualo', '1938-01-01', 'Mestizo', 'Solo/a', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Tomasa', 'Tibalombo Chugchilan', '201388113', 'Femenino', '', 'Entrada a Patain', '1935-01-01', 'Mestizo', 'Familia', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('María Hortencia', 'Toaquiza Aguaisa', '0500704507', 'Femenino', '', 'Vía a Yambo', '1948-01-01', 'Mestizo', 'Solo/a', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Segundo Manuel', 'Toaquiza Aguaisa', '', 'Masculino', '', 'Vía a Yambo', '1949-01-01', 'Mestizo', 'Cónyuge', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Hilda Americo', 'Villacís Villacís', '0500497581', 'Femenino', '', 'Centro de Patain', '1939-01-01', 'Mestizo', 'Familia', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Luis Oswaldo', 'Peralta Caicedo', '0500316080', 'Masculino', '', 'Sector de la iglesia', '1948-01-01', 'Mestizo', 'Solo/a', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Mariana Jesús', 'Llanganate', '', 'Femenino', '', 'Centro de Patain', '1951-01-01', 'Mestizo', 'Hijo/a', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Ramón Hector', 'Fonseca', '0501318869', 'Masculino', '', 'Llapungo', '1953-01-01', 'Mestizo', 'Otro', 1, 1, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Luis Abel', 'Bocancho', '1600041022', 'Masculino', '', 'Centro de Patain', '1949-01-01', 'Mestizo', 'Otro', 1, 0, 0, 1);
+
+INSERT INTO PERSONAS (nombres, apellidos, cedula, sexo, telefonoContacto, direccion, fecha_nacimiento, etnia, vive_con, via_acceso, posee_discapacidad, posee_carnet_discapacidad, id_unidad_atencion) VALUES
+('Laura Corina', 'Sanchez Peralta', '0505532072', 'Femenino', '', 'Via a Yambo', '1939-01-01', 'Mestizo', 'Cónyuge', 1, 0, 0, 1);
+
+
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 4);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 6);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 7);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 8);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 10);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('2', '', '', '', 1, 12);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('2', '', '', '', 1, 13);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 15);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 16);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 17);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 18);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('2', '', '', '', 1, 20);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 21);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('2', '', '', '', 1, 22);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 23);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('2', '', '', '', 1, 24);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 25);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 26);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('2', '', '', '', 1, 27);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 28);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('2', '', '', '', 1, 30);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 31);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 33);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 36);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 37);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 38);
+INSERT INTO ENFERMEDAD_PERSONA(nivel_enfermedad, tipo_tratamiento, recomendacion, lugar_atencion, id_enfermedad, id_persona) VALUES ('1', '', '', '', 1, 39);
+
+
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 2, 6);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (90.0, '', 2, 7);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 3, 7);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 2, 12);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 4, 13);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 2, 15);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 4, 18);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 3, 20);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 4, 20);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 5, 26);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 4, 27);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 2, 28);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 2, 29);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 2, 30);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 2, 31);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 3, 32);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 3, 33);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 4, 36);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 2, 38);
+INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 5, 38);
