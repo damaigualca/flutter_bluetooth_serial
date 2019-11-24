@@ -11,7 +11,7 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Text(' hola'),
+      child: Text('Completar basandose en las demas'),
     );
   }
 }

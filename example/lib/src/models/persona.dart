@@ -9,16 +9,13 @@ class Persona{
   String sexo;
   String telefonoContacto;
   String direccion;
-  DateTime fechaNacimiento;
+  String fechaNacimiento;
   String etnia;
   String viveCon;
-  String tipoCasa;
-  String tipoVivienda;
-  String estructuraVivienda;
+  String imagen;
   bool poseeDiscapacidad;
-  String tipoServicio;
   bool poseeCarnetDiscapacidad;
-  UnidadAtencion unidadAtencion;
+  int unidadAtencionId;
 
   Persona(
     this.id,
@@ -31,13 +28,10 @@ class Persona{
     this.fechaNacimiento,
     this.etnia,
     this.viveCon,
-    this.tipoCasa,
-    this.tipoVivienda,
-    this.estructuraVivienda,
+    this.imagen,
     this.poseeDiscapacidad,
-    this.tipoServicio,
     this.poseeCarnetDiscapacidad,
-    this.unidadAtencion
+    this.unidadAtencionId
   );
 
   Persona.fromJson(Map<String, dynamic> json) {
@@ -51,12 +45,32 @@ class Persona{
     this.fechaNacimiento = json[DataBaseCreator.fechaNacimiento];
     this.etnia = json[DataBaseCreator.etnia];
     this.viveCon = json[DataBaseCreator.viveCon];
-    this.tipoCasa = json[DataBaseCreator.tipoCasa];
-    this.tipoVivienda = json[DataBaseCreator.tipoVivienda];
-    this.estructuraVivienda = json[DataBaseCreator.estructuraVivienda];
+    this.imagen = json[DataBaseCreator.imagen];
     this.poseeDiscapacidad = json[DataBaseCreator.poseeDiscapacidad] == 1;
-    this.tipoServicio = json[DataBaseCreator.tipoServicio];
     this.poseeCarnetDiscapacidad = json[DataBaseCreator.poseeCarnetDiscapacidad] == 1;
-    this.unidadAtencion.id = json[DataBaseCreator.unidadAtencionId];
+    this.unidadAtencionId = json[DataBaseCreator.unidadAtencionId];
+  }
+
+  getImage(){
+    if (this.imagen == ''){
+      if(this.sexo == 'Femenino'){
+        return 'assets/images/avatar-femenino.jpg';
+      }else{
+        return 'assets/images/avatar-masculino.jpg';
+      }
+    }else{
+      // Implentar la decodificacion del string a imagen usando base 64
+    }
+  }
+
+  getEdad(){
+    DateTime currentDate = DateTime.now();
+    DateTime birthDate = DateTime.parse(this.fechaNacimiento);
+    Duration dur = currentDate.difference(birthDate);
+    return (dur.inDays/365).floor().toString();
+  }
+
+  getFullName(){
+    return this.nombres + ' ' + this.apellidos;
   }
 }

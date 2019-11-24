@@ -32,12 +32,9 @@ class DataBaseCreator{
   static const fechaNacimiento ="fecha_nacimiento";
   static const etnia = "etnia";
   static const viveCon = "vive_con";
-  static const tipoCasa = "tipo_casa";
-  static const tipoVivienda = "tipo_vivienda";
-  static const estructuraVivienda = "estructura_vivienda";
   static const viaAcceso = "via_acceso";
   static const poseeDiscapacidad = "posee_discapacidad";
-  static const tipoServicio = "tipo_servicio";
+  static const imagen = "imagen";
   static const poseeCarnetDiscapacidad = "posee_carnet_discapacidad";
   static const unidadAtencionId = "id_unidad_atencion";
 
@@ -71,6 +68,7 @@ class DataBaseCreator{
   static const completado = "completado";
   static const tiempoEmpleado = "tiempo_empleado";
   static const repeticionesCorrectas = "repeticiones_correctas";
+  static const repeticionesFallidas = "repeticiones_fallidas";
 
 
 
@@ -84,113 +82,6 @@ class DataBaseCreator{
       print(insertAndUpdateQueryResult);
     }
   }
-
-  Future<void> createUnidadAtencionTable(Database db) async {
-    final unidadAtencionSql = '''CREATE TABLE $unidadAtencionTable
-    (
-      $id INTEGER PRIMARY KEY AUTOINCREMENT,
-      $nombreUnidad TEXT,
-      $canton TEXT,
-      $ciudad TEXT,
-      $parroquia TEXT,
-      $sector TEXT,
-      $tecnicoEncargado TEXT,
-      $celularTecnico TEXT,
-      $correo TEXT
-    )''';
-    await db.execute(unidadAtencionSql);
-  }
-
-  Future<void> createPersonaTable(Database db) async {
-    final personaSql = '''CREATE TABLE $personaTable
-    (
-      $id INTEGER PRIMARY KEY AUTOINCREMENT,
-      $nombres TEXT,
-      $apellidos TEXT,
-      $cedula TEXT,
-      $sexo TEXT,
-      $telefonoContacto TEXT,
-      $direccion TEXT,
-      $fechaNacimiento TEXT,
-      $etnia TEXT,
-      $viveCon TEXT,
-      $tipoCasa TEXT,
-      $tipoVivienda TEXT,
-      $estructuraVivienda TEXT,
-      $viaAcceso BIT NOT NULL,
-      $poseeDiscapacidad BIT NOT NULL,
-      $tipoServicio TEXT,
-      $poseeCarnetDiscapacidad BIT NOT NULL,
-      $unidadAtencionId INTEGER NOT NULL,
-      FOREIGN KEY($unidadAtencionId) REFERENCES $unidadAtencionTable($id)
-    )''';
-    await db.execute(personaSql);
-  }
-
-  Future<void> createDiscapacidadTable(Database db) async {
-    final discapacidadSql = '''CREATE TABLE $discapacidadTable
-    (
-      $id INTEGER PRIMARY KEY AUTOINCREMENT,
-      $nombre TEXT
-    )''';
-    await db.execute(discapacidadSql);
-  }
-
-  Future<void> createDiscapacidadPersonaTable(Database db) async {
-    final discapacidadPersonaSql = '''CREATE TABLE $discapacidadPersonaTable
-    (
-      $id INTEGER PRIMARY KEY AUTOINCREMENT,
-      $porcentaje REAL,
-      $personaId INTEGER NOT NULL,
-      $unidadAtencionId INTEGER NOT NULL,
-      FOREIGN KEY($unidadAtencionId) REFERENCES $unidadAtencionTable($id),
-      FOREIGN KEY($personaId) REFERENCES $personaTable($id)
-    )''';
-    await db.execute(discapacidadPersonaSql);
-  }
-
-  Future<void> createEnfermedadTable(Database db) async {
-    final enfermedadSql = '''CREATE TABLE $enfermedadTable
-    (
-      $id INTEGER PRIMARY KEY AUTOINCREMENT,
-      $nombre TEXT
-    )''';
-    await db.execute(enfermedadSql);
-  }
-
-  Future<void> createEnfermedadPersonaTable(Database db) async {
-    final enfermedadPersonaSql = '''CREATE TABLE $enfermedadPersonaTable
-    (
-      $id INTEGER PRIMARY KEY AUTOINCREMENT,
-      $nivelEnfermedad TEXT,
-      $tipoTratamiento TEXT,
-      $recomendacion TEXT,
-      $lugarAtencion TEXT,
-      $personaId INTEGER NOT NULL,
-      $enfermedadId INTEGER NOT NULL,
-      FOREIGN KEY($enfermedadId) REFERENCES $enfermedadTable($id),
-      FOREIGN KEY($personaId) REFERENCES $personaTable($id)
-    )''';
-    await db.execute(enfermedadPersonaSql);
-  }
-
-  Future<void> createTerapiaTable(Database db) async {
-    final terapiaSql = '''CREATE TABLE $terapiaTable
-    (
-      $id INTEGER PRIMARY KEY AUTOINCREMENT,
-      $fecha TEXT,
-      $tipoTerapia TEXT,
-      $repeticionesAsignadas TEXT,
-      $observaciones TEXT,
-      $completado BIT NOT NULL,
-      $tiempoEmpleado TEXT,
-      $repeticionesCorrectas INTEGER,
-      $personaId INTEGER NOT NULL,
-      FOREIGN KEY($personaId) REFERENCES $personaTable($id)
-    )''';
-    await db.execute(terapiaSql);
-  }
-
 
   Future<void> initDatabase() async {
     var databasesPath = await getDatabasesPath();
@@ -214,7 +105,7 @@ class DataBaseCreator{
     } else{
       print("Abriendo db existente");
     }
-    db = await openDatabase(path, version: 3);
+    db = await openDatabase(path, version: 5);
     print(db);
   }
 }

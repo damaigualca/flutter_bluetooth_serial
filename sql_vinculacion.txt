@@ -25,15 +25,12 @@ CREATE TABLE "PERSONAS" (
 	"fecha_nacimiento"	TEXT,
 	"etnia"	TEXT,
 	"vive_con"	TEXT,
-	"tipo_casa"	TEXT,
-	"tipo_vivienda"	TEXT,
-	"estructura_vivienda"	TEXT,
 	"via_acceso"	BIT NOT NULL,
-	"posee_discapacidad" BIT NOT NULL,
-	"tipo_servicio"	TEXT,
-	"posee_carnet_discapacidad" BIT NOT NULL,
+	"posee_discapacidad"	BIT NOT NULL,
+	"posee_carnet_discapacidad"	BIT NOT NULL,
+	"imagen"	TEXT,
 	"id_unidad_atencion"	INTEGER,
-	FOREIGN KEY("id_unidad_atencion") REFERENCES UNIDADES_ATENCION("id")
+	FOREIGN KEY("id_unidad_atencion") REFERENCES "UNIDADES_ATENCION"("id")
 );
 
 CREATE TABLE "DISCAPACIDADES" (
