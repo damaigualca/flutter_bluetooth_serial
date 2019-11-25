@@ -12,9 +12,9 @@ class Terapia{
   int repeticionesCorrectas;
   int repeticionesFallidas;
   int personaId;
+  Persona persona;
 
   Terapia(
-    this.id,
     this.fecha,
     this.tipoTerapia,
     this.repeticionesAsignadas,
@@ -23,7 +23,8 @@ class Terapia{
     this.tiempoEmpleado,
     this.repeticionesCorrectas,
     this.repeticionesFallidas,
-    this.personaId
+    this.personaId,
+    this.persona,
   );
 
   Terapia.fromJson(Map<String, dynamic> json) {
@@ -37,5 +38,33 @@ class Terapia{
     this.repeticionesCorrectas = json[DataBaseCreator.fechaNacimiento];
     this.repeticionesFallidas = json[DataBaseCreator.repeticionesFallidas];
     this.personaId = json[DataBaseCreator.personaId];
+  }
+
+  getImageFromTerapiaType(){
+    if (this.tipoTerapia == 'ESCALERA'){
+      return 'assets/images/escalera.jpg';
+    } else if(this.tipoTerapia == 'PIEZAS'){
+      return 'assets/images/piezas.jpg';
+    } else if(this.tipoTerapia == 'RECORRIDO') {
+      return 'assets/images/recorrido.jpg';
+    } else if(this.tipoTerapia == 'FOCOS'){
+      return 'assets/images/focos.jpg';
+    } else {
+      return 'assets/images/escalera.jpg';
+    }
+  }
+
+  getNameFromTerapiaType(){
+    if (this.tipoTerapia == 'ESCALERA'){
+      return 'Terapia 1';
+    } else if(this.tipoTerapia == 'PIEZAS'){
+      return 'Terapia 2';
+    } else if(this.tipoTerapia == 'RECORRIDO') {
+      return 'Terapia 3';
+    } else if(this.tipoTerapia == 'FOCOS'){
+      return 'Terapia 4';
+    } else {
+      return 'Otro';
+    }
   }
 }

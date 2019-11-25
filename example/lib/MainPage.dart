@@ -490,9 +490,10 @@ class _MainPage extends State<MainPage> {
         }
       });
       if (v){
-        listNuevasTerapias.add(new Terapia(1, fechaCreacion, k, repeticiones, '', false, '', 0, 0, personaSelected.id));
+        listNuevasTerapias.add(new Terapia(fechaCreacion, k, repeticiones, '', false, '', 0, 0, personaSelected.id, personaSelected));
       }
     });
+    return listNuevasTerapias;
   }
 
   Widget _createHeader(){
