@@ -22,7 +22,7 @@ class _TerapiaPageState extends State<TerapiaPage> {
   Persona personaSelected;
   Terapia terapiaSelected;
   int posicionActualListaTerapias = 0;
-  String obervaciones = '';
+  String observaciones = '';
   int totalTerapias;
 
   void updateTime(Timer timer){
@@ -194,7 +194,7 @@ class _TerapiaPageState extends State<TerapiaPage> {
               )
             ),
             onChanged: (valor){
-              obervaciones = valor;
+              observaciones = valor;
             },
           ),
           Divider(height: 40.0, thickness: 0.0, color: Colors.white,),

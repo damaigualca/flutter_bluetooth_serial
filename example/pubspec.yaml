@@ -8,11 +8,16 @@ homepage: https://github.com/edufolly/flutter_bluetooth_serial/tree/master/examp
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   scoped_model: ^1.0.1
 
   cupertino_icons: ^0.1.2
   sqflite: ^1.1.7+1
+  grouped_buttons: ^1.0.4
+  basic_utils: ^2.3.7
+  flutter_typeahead: ^1.7.0
 
 dev_dependencies:
   flutter_test:

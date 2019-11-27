@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial_example/src/pages/profiles_detail_page.dart';
 import 'package:flutter_bluetooth_serial_example/src/pages/terapia_page.dart';
 import 'package:flutter_bluetooth_serial_example/src/providers/database_creator.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import './MainPage.dart';
 
@@ -18,6 +19,15 @@ class ExampleApplication extends StatelessWidget {
       statusBarColor: Color.fromRGBO(250, 250, 250, 1)
     )); 
     return MaterialApp(
+      localizationsDelegates: [
+        // ... app-specific localization delegate[s] here
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+          const Locale('en', 'US'), // English
+          const Locale('es', 'ES'), // Hebrew
+      ],
       debugShowCheckedModeBanner: false,
       home: MainPage(),
       routes: {

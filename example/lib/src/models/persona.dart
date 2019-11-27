@@ -13,6 +13,7 @@ class Persona{
   String etnia;
   String viveCon;
   String imagen;
+  int viaAcceso;
   bool poseeDiscapacidad;
   bool poseeCarnetDiscapacidad;
   int unidadAtencionId;
@@ -29,6 +30,7 @@ class Persona{
     this.etnia,
     this.viveCon,
     this.imagen,
+    this.viaAcceso,
     this.poseeDiscapacidad,
     this.poseeCarnetDiscapacidad,
     this.unidadAtencionId
@@ -45,6 +47,7 @@ class Persona{
     this.fechaNacimiento = json[DataBaseCreator.fechaNacimiento];
     this.etnia = json[DataBaseCreator.etnia];
     this.viveCon = json[DataBaseCreator.viveCon];
+    this.viaAcceso = json[DataBaseCreator.viaAcceso];
     this.imagen = json[DataBaseCreator.imagen];
     this.poseeDiscapacidad = json[DataBaseCreator.poseeDiscapacidad] == 1;
     this.poseeCarnetDiscapacidad = json[DataBaseCreator.poseeCarnetDiscapacidad] == 1;
@@ -72,5 +75,22 @@ class Persona{
 
   getFullName(){
     return this.nombres + ' ' + this.apellidos;
+  }
+
+  getSexState(){
+    if(this.sexo == 'masculino' || this.sexo == 'Masculino' || this.sexo == 'MASCULINO'){
+      return 1;
+    }else{
+      return 0;
+    }
+  }
+
+  getEdadInDateTimeFormat(){
+    if(this.fechaNacimiento != ''){
+      return DateTime.parse(this.fechaNacimiento);
+    }else{
+      return DateTime.now();
+    }
+    
   }
 }
