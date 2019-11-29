@@ -58,11 +58,11 @@ class _MainPage extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(250, 250, 250, 1),
-        brightness: Brightness.light,
-        elevation: 0,
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: Color.fromRGBO(250, 250, 250, 1),
+      //   brightness: Brightness.light,
+      //   elevation: 0,
+      // ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.play_arrow),
         onPressed: (){

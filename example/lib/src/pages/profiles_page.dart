@@ -20,31 +20,56 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView(
-        children: <Widget>[
-          ListTile(
-            title: Center(
-              child: const Text('Pacientes', style: TextStyle(
-                fontSize: 26.0,
-                fontWeight: FontWeight.bold,
-              )),
-            )
-          ),
-          SizedBox(height: 20.0),
-          FutureBuilder(
-            future: future,
-            builder: (BuildContext context, AsyncSnapshot<List> snapshot){
-               if (snapshot.hasData) {
-                return Column(
-                  children: snapshot.data.map((todo) => _construirItemList(todo)).toList()
-                );
-              } else {
-                return CircularProgressIndicator();
-              }
-            },
+      color: Colors.white,
+      child: CustomScrollView(
+        slivers: <Widget>[
+          _createAppbar(),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                FutureBuilder(
+                  future: future,
+                  builder: (BuildContext context, AsyncSnapshot<List> snapshot){
+                    if (snapshot.hasData) {
+                      return Container(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: Column(
+                          children: snapshot.data.map((todo) => _construirItemList(todo)).toList()
+                        ),
+                      );
+                    } else {
+                      return CircularProgressIndicator();
+                    }
+                  },
+                )
+              ]
+            ),
           )
         ],
-      )
+      ),
+    );
+  }
+
+  Widget _createAppbar(){
+    return SliverAppBar(
+      brightness: Brightness.light,
+      backgroundColor: Colors.white,
+      expandedHeight: 100.0,
+      flexibleSpace: FlexibleSpaceBar(
+        centerTitle: true,
+        title: Text(
+          'Pacientes', 
+          style: TextStyle(color: Colors.black, fontSize: 20.0),
+        ),
+      ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add, color: Colors.blue),
+          tooltip: 'Agregar',
+          onPressed: (){
+          },
+        )
+      ],
     );
   }
 

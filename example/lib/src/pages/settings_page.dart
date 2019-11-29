@@ -79,47 +79,40 @@ class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView(
-        children: <Widget>[
-          ListTile(
-            title: Center(
-              child: const Text('Configuraciones', style: TextStyle(
-                fontSize: 26.0,
-                fontWeight: FontWeight.bold,
-              )),
-            )
-          ),
-          Center(
-            child: _createEnableBluetoothCard()
-          ),
-          Center(
-            child: _createAboutDeviceCard(),
-          ),
-            ListTile(
-              title: const Text('Devices discovery and connection')
-            ),
-            SwitchListTile(
-              title: const Text('Auto-try specific pin when pairing'),
-              subtitle: const Text('Pin 1234'),
-              value: _autoAcceptPairingRequests,
-              onChanged: (bool value) {
-                setState(() {
-                  _autoAcceptPairingRequests = value;
-                });
-                if (value) {
-                  FlutterBluetoothSerial.instance.setPairingRequestHandler((BluetoothPairingRequest request) {
-                    print("Trying to auto-pair with Pin 1234");
-                    if (request.pairingVariant == PairingVariant.Pin) {
-                      return Future.value("1234");
+      color: Colors.white,
+      child: CustomScrollView(
+        slivers: <Widget>[
+          _createAppbar(),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                _createEnableBluetoothCard(),
+                _createAboutDeviceCard(),
+                ListTile(
+                  title: const Text('Devices discovery and connection')
+                ),
+                SwitchListTile(
+                  title: const Text('Auto-try specific pin when pairing'),
+                  subtitle: const Text('Pin 1234'),
+                  value: _autoAcceptPairingRequests,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _autoAcceptPairingRequests = value;
+                    });
+                    if (value) {
+                      FlutterBluetoothSerial.instance.setPairingRequestHandler((BluetoothPairingRequest request) {
+                        print("Trying to auto-pair with Pin 1234");
+                        if (request.pairingVariant == PairingVariant.Pin) {
+                          return Future.value("1234");
+                        }
+                        return null;
+                      });
                     }
-                    return null;
-                  });
-                }
-                else {
-                  FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
-                }
-              },
-            ),
+                    else {
+                      FlutterBluetoothSerial.instance.setPairingRequestHandler(null);
+                    }
+                  },
+                ),
             ListTile(
               title: RaisedButton(
                 child: const Text('Explore discovered devices'),
@@ -135,24 +128,6 @@ class _SettingPageState extends State<SettingPage> {
                     print('Discovery -> no device selected');
                   }
                 }
-              ),
-            ),
-            ListTile(
-              title: RaisedButton(
-                child: const Text('Connect to paired device to chat'),
-                onPressed: () async {
-                  final BluetoothDevice selectedDevice = await Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) { return SelectBondedDevicePage(checkAvailability: false); })
-                  );
-
-                  if (selectedDevice != null) {
-                    print('Connect -> selected ' + selectedDevice.address);
-                    _startChat(context, selectedDevice);
-                  }
-                  else {
-                    print('Connect -> no device selected');
-                  }
-                },
               ),
             ),
 
@@ -200,7 +175,25 @@ class _SettingPageState extends State<SettingPage> {
                 } : null,
               )
             ),
+              ]
+            ),
+          )
         ],
+      ),
+    );
+  }
+
+  Widget _createAppbar(){
+    return SliverAppBar(
+      brightness: Brightness.light,
+      backgroundColor: Colors.white,
+      expandedHeight: 100.0,
+      flexibleSpace: FlexibleSpaceBar(
+        centerTitle: true,
+        title: Text(
+          'Configuraciones', 
+          style: TextStyle(color: Colors.black, fontSize: 20.0),
+        ),
       ),
     );
   }

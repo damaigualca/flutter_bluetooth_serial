@@ -16,7 +16,8 @@ class ExampleApplication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Color.fromRGBO(250, 250, 250, 1)
+      statusBarColor: Colors.white,
+      statusBarBrightness: Brightness.dark,
     )); 
     return MaterialApp(
       localizationsDelegates: [

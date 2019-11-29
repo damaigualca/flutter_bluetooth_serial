@@ -12,7 +12,7 @@ class ProfileDetail extends StatefulWidget {
   _ProfileDetailState createState() => _ProfileDetailState();
 }
 
-class _ProfileDetailState extends State<ProfileDetail> {
+class _ProfileDetailState extends State<ProfileDetail> with SingleTickerProviderStateMixin{
   final estiloTitulo = TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold);
   final estiloSubtitulo = TextStyle(fontSize: 18.0, color: Colors.grey);
   int selectedRadio = 0;
@@ -24,11 +24,15 @@ class _ProfileDetailState extends State<ProfileDetail> {
   TextEditingController fechaNacimientoIController = new TextEditingController();
   Future<List<EnfermedadPersona>> futureEnfermedad;
   Future<List<DiscapacidadPersona>> futureDiscapacidad;
-
+TabController controller;
   @override
   void initState() { 
     super.initState();
     selectedRadio = 0;
+    controller = TabController(
+      length: 4,
+      vsync: this,
+    );
   }
 
   setSelectedRadio(int val){
@@ -42,6 +46,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
       selectedViaAccesoRadio = val;
     });
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -52,41 +57,37 @@ class _ProfileDetailState extends State<ProfileDetail> {
     futureEnfermedad = EnfermedadPersonaService.getAll(personaSelected.id);
     futureDiscapacidad = DiscapacidadPersonaService.getAll(personaSelected.id);
 
-    return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: <Widget>[
-            _createAppbar(),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  _createTabs()
-                ]
-              ),
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          _createAppbar(),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                _createTabs(),
+              ]
             ),
-            SliverFillRemaining(
-              child: _createTabViews(),
-            )
-          ],
-        )
-      )
+          ),
+          SliverFillRemaining(
+            child: _createTabViews(),
+          )
+        ],
+      ),
     );
-    
   }
 
   Widget _createAppbar(){
     return SliverAppBar(
       backgroundColor: Colors.blue,
       brightness: Brightness.light,
-      expandedHeight: 300.0,
+      expandedHeight: 250.0,
       floating: false,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: Text(
           personaSelected.getFullName(), 
-          style: TextStyle(color: Colors.white, fontSize: 16.0),
+          style: TextStyle(color: Colors.white, fontSize: 12.0),
         ),
         background: FadeInImage(
           image: AssetImage(personaSelected.getImage()),
@@ -104,6 +105,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
         Container(
           constraints: BoxConstraints.expand(height: 50),
           child: TabBar(
+            controller: controller,
             labelColor: Colors.black,
             tabs: <Widget>[
               Tab(icon: Icon(Icons.person)),
@@ -119,72 +121,17 @@ class _ProfileDetailState extends State<ProfileDetail> {
   
   Widget _createTabViews(){
     return TabBarView(
+      controller: controller,
       children: [
-        ListView(
+        SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.all(20.0),
-          children: <Widget>[
-            _showInformacionPersonal(),
-          ],
+          child: _showInformacionPersonal()
         ),
-        ListView(
+        SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.all(20.0),
-          children: <Widget>[
-            _createTitleEnfermades(),
-            FutureBuilder(
-              future: futureEnfermedad,
-              builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-                if(snapshot.hasData){
-                  return SingleChildScrollView(
-                    child: DataTable(
-                      columns: [
-                        DataColumn(label: Text('Enfermedad')),
-                        DataColumn(label: Text('Nivel')),
-                        DataColumn(label: Text('Tratamiento')),
-                      ],
-                      rows: snapshot.data
-                        .map((ep) => DataRow(
-                          cells: [
-                            DataCell(Text(ep.nombre)),
-                            DataCell(Text(ep.nivelEnfermedad)),
-                            DataCell(Text(ep.tipoTratamiento)),
-                          ]
-                        )).toList()
-                    ),
-                  );
-                }else{
-                  return CircularProgressIndicator();
-                }
-              },
-            ),
-            SizedBox(height: 40.0),
-            _createTitleDiscapacidades(),
-            FutureBuilder(
-              future: futureDiscapacidad,
-              builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-                if(snapshot.hasData){
-                  return SingleChildScrollView(
-                    child: DataTable(
-                      columns: [
-                        DataColumn(label: Text('Discapacidad')),
-                        DataColumn(label: Text('Porcentaje')),
-                        DataColumn(label: Text('Descripción')),
-                      ],
-                      rows: snapshot.data
-                        .map((dp) => DataRow(
-                          cells: [
-                            DataCell(Text(dp.nombre)),
-                            DataCell(Text('${dp.porcentaje.round().toString()} %')),
-                            DataCell(Text(dp.descripcion)),
-                          ]
-                        )).toList()
-                    ),
-                  );
-                }else{
-                  return CircularProgressIndicator();
-                }
-              },
-            ),
-          ],
+          child: _showEnfermedadesDiscapacidades(),
         ),
         ListView(
           padding: EdgeInsets.all(20.0),
@@ -234,12 +181,83 @@ class _ProfileDetailState extends State<ProfileDetail> {
       ],
     );
   }
+
+  Widget _showEnfermedadesDiscapacidades(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _createTitleEnfermades(),
+        _buildEnfermedades(),
+        SizedBox(height: 20.0),
+        _createTitleDiscapacidades(),
+        _buildDiscapacidades()
+      ],
+    );
+  }
   
+  Widget _buildEnfermedades(){
+    return FutureBuilder(
+      future: futureEnfermedad,
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        if(snapshot.hasData){
+          return SingleChildScrollView(
+            child: DataTable(
+              columns: [
+                DataColumn(label: Text('Enfermedad')),
+                DataColumn(label: Text('Nivel')),
+                DataColumn(label: Text('Tratamiento')),
+              ],
+              rows: snapshot.data
+                .map((ep) => DataRow(
+                  cells: [
+                    DataCell(Text(ep.nombre)),
+                    DataCell(Text(ep.nivelEnfermedad)),
+                    DataCell(Text(ep.tipoTratamiento)),
+                  ]
+                )).toList()
+            ),
+          );
+        }else{
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+  Widget _buildDiscapacidades(){
+    return FutureBuilder(
+      future: futureDiscapacidad,
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        if(snapshot.hasData){
+          return SingleChildScrollView(
+            child: DataTable(
+              columns: [
+                DataColumn(label: Text('Discapacidad')),
+                DataColumn(label: Text('Porcentaje')),
+                DataColumn(label: Text('Descripción')),
+              ],
+              rows: snapshot.data
+                .map((dp) => DataRow(
+                  cells: [
+                    DataCell(Text(dp.nombre)),
+                    DataCell(Text('${dp.porcentaje.round().toString()} %')),
+                    DataCell(Text(dp.descripcion)),
+                  ]
+                )).toList()
+            ),
+          );
+        }else{
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
   Widget _createTitle(){
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text('Información personal',style: estiloTitulo),
-        SizedBox(width: 50.0),
         IconButton(
           icon: (editable) ? Icon(Icons.mode_edit, color: Colors.blue): Icon(Icons.edit, color: Colors.black),
           tooltip: 'Editar',
@@ -491,9 +509,9 @@ class _ProfileDetailState extends State<ProfileDetail> {
 
   Widget _createTitleEnfermades(){
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text('Enfermedades',style: estiloTitulo),
-        SizedBox(width: 50.0),
         IconButton(
           icon: (editable) ? Icon(Icons.mode_edit, color: Colors.blue): Icon(Icons.edit, color: Colors.black),
           tooltip: 'Editar',
@@ -513,9 +531,9 @@ class _ProfileDetailState extends State<ProfileDetail> {
 
   Widget _createTitleDiscapacidades(){
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text('Discapacidades',style: estiloTitulo),
-        SizedBox(width: 50.0),
         IconButton(
           icon: (editable) ? Icon(Icons.mode_edit, color: Colors.blue): Icon(Icons.edit, color: Colors.black),
           tooltip: 'Editar',
