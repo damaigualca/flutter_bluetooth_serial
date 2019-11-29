@@ -18,6 +18,9 @@ dependencies:
   grouped_buttons: ^1.0.4
   basic_utils: ^2.3.7
   flutter_typeahead: ^1.7.0
+  image_picker: ^0.6.2+1
+  video_player: ^0.10.3+3
+
 
 dev_dependencies:
   flutter_test:

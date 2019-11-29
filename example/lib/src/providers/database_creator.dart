@@ -58,6 +58,7 @@ class DataBaseCreator{
   static const discapacidadPersonaTable = "DISCAPACIDAD_PERSONA";
   static const discapacidadId = "id_discapacidad";
   static const porcentaje = "porcentaje";
+  static const descripcion = "descripcion";
 
   // Terapia
   static const terapiaTable = "TERAPIAS";

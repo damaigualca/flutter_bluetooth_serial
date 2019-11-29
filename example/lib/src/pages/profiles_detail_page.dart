@@ -1,7 +1,10 @@
-import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bluetooth_serial_example/src/models/discapacidad_persona.dart';
+import 'package:flutter_bluetooth_serial_example/src/models/enfermedad_persona.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/persona.dart';
+import 'package:flutter_bluetooth_serial_example/src/services/discapacidad_persona.dart';
+import 'package:flutter_bluetooth_serial_example/src/services/enfermedad_persona_service.dart';
 import 'package:intl/intl.dart';
 
 class ProfileDetail extends StatefulWidget {
@@ -19,6 +22,8 @@ class _ProfileDetailState extends State<ProfileDetail> {
   bool editable = false;
   Persona personaSelected;
   TextEditingController fechaNacimientoIController = new TextEditingController();
+  Future<List<EnfermedadPersona>> futureEnfermedad;
+  Future<List<DiscapacidadPersona>> futureDiscapacidad;
 
   @override
   void initState() { 
@@ -44,6 +49,8 @@ class _ProfileDetailState extends State<ProfileDetail> {
     sexDefault = personaSelected.getSexState();
     viaAccesoDefault = personaSelected.viaAcceso;
     fechaNacimientoIController.text = personaSelected.fechaNacimiento;
+    futureEnfermedad = EnfermedadPersonaService.getAll(personaSelected.id);
+    futureDiscapacidad = DiscapacidadPersonaService.getAll(personaSelected.id);
 
     return DefaultTabController(
       length: 4,
@@ -70,7 +77,6 @@ class _ProfileDetailState extends State<ProfileDetail> {
 
   Widget _createAppbar(){
     return SliverAppBar(
-      elevation: 2.0,
       backgroundColor: Colors.blue,
       brightness: Brightness.light,
       expandedHeight: 300.0,
@@ -120,9 +126,78 @@ class _ProfileDetailState extends State<ProfileDetail> {
             _showInformacionPersonal(),
           ],
         ),
-        Icon(Icons.directions_transit),
-        Icon(Icons.directions_bike),
-        Icon(Icons.directions_bike),
+        ListView(
+          padding: EdgeInsets.all(20.0),
+          children: <Widget>[
+            _createTitleEnfermades(),
+            FutureBuilder(
+              future: futureEnfermedad,
+              builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                if(snapshot.hasData){
+                  return SingleChildScrollView(
+                    child: DataTable(
+                      columns: [
+                        DataColumn(label: Text('Enfermedad')),
+                        DataColumn(label: Text('Nivel')),
+                        DataColumn(label: Text('Tratamiento')),
+                      ],
+                      rows: snapshot.data
+                        .map((ep) => DataRow(
+                          cells: [
+                            DataCell(Text(ep.nombre)),
+                            DataCell(Text(ep.nivelEnfermedad)),
+                            DataCell(Text(ep.tipoTratamiento)),
+                          ]
+                        )).toList()
+                    ),
+                  );
+                }else{
+                  return CircularProgressIndicator();
+                }
+              },
+            ),
+            SizedBox(height: 40.0),
+            _createTitleDiscapacidades(),
+            FutureBuilder(
+              future: futureDiscapacidad,
+              builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                if(snapshot.hasData){
+                  return SingleChildScrollView(
+                    child: DataTable(
+                      columns: [
+                        DataColumn(label: Text('Discapacidad')),
+                        DataColumn(label: Text('Porcentaje')),
+                        DataColumn(label: Text('Descripción')),
+                      ],
+                      rows: snapshot.data
+                        .map((dp) => DataRow(
+                          cells: [
+                            DataCell(Text(dp.nombre)),
+                            DataCell(Text('${dp.porcentaje.round().toString()} %')),
+                            DataCell(Text(dp.descripcion)),
+                          ]
+                        )).toList()
+                    ),
+                  );
+                }else{
+                  return CircularProgressIndicator();
+                }
+              },
+            ),
+          ],
+        ),
+        ListView(
+          padding: EdgeInsets.all(20.0),
+          children: <Widget>[
+            _createTitleDiscapacidades(),
+          ],
+        ),
+        ListView(
+          padding: EdgeInsets.only(top: 30.0, left: 20.0),
+          children: <Widget>[
+            _createTitleTerapias(),
+          ],
+        )
       ],
     );
   }
@@ -412,5 +487,58 @@ class _ProfileDetailState extends State<ProfileDetail> {
       return Container();
     }
     
+  }
+
+  Widget _createTitleEnfermades(){
+    return Row(
+      children: <Widget>[
+        Text('Enfermedades',style: estiloTitulo),
+        SizedBox(width: 50.0),
+        IconButton(
+          icon: (editable) ? Icon(Icons.mode_edit, color: Colors.blue): Icon(Icons.edit, color: Colors.black),
+          tooltip: 'Editar',
+          onPressed: (){
+            // setState(() {
+            //   if (editable){
+            //     editable = false;
+            //   }else{
+            //     editable = true;
+            //   }
+            // });
+          },
+        )
+      ],
+    );
+  }
+
+  Widget _createTitleDiscapacidades(){
+    return Row(
+      children: <Widget>[
+        Text('Discapacidades',style: estiloTitulo),
+        SizedBox(width: 50.0),
+        IconButton(
+          icon: (editable) ? Icon(Icons.mode_edit, color: Colors.blue): Icon(Icons.edit, color: Colors.black),
+          tooltip: 'Editar',
+          onPressed: (){
+            // setState(() {
+            //   if (editable){
+            //     editable = false;
+            //   }else{
+            //     editable = true;
+            //   }
+            // });
+          },
+        )
+      ],
+    );
+  }
+
+  Widget _createTitleTerapias(){
+    return Row(
+      children: <Widget>[
+        Text('Lista de terapias completadas',style: estiloTitulo),
+        SizedBox(width: 50.0),
+      ],
+    );
   }
 }

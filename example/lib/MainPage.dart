@@ -211,6 +211,12 @@ class _MainPage extends State<MainPage> {
                                   personaSelected = persona;
                                   _typeAheadController.text = persona.getFullName();
                                 },
+                                noItemsFoundBuilder: (context){
+                                  personaSelected = null;
+                                  return ListTile(
+                                    title: Text('No se encontraron elementos',style: TextStyle(color: Colors.blue)),
+                                  );
+                                }
                               ),
                             ),
                             Container(

@@ -17,45 +17,20 @@ class _ProfilePageState extends State<ProfilePage> {
     future = PersonaService.getAll();
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.transparent,
       child: ListView(
         children: <Widget>[
-          Center(
-            child: Text('Pacientes', style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold)),
+          ListTile(
+            title: Center(
+              child: const Text('Pacientes', style: TextStyle(
+                fontSize: 26.0,
+                fontWeight: FontWeight.bold,
+              )),
+            )
           ),
-          Container(
-            margin: EdgeInsets.only(top: 20.0),
-            width: MediaQuery.of(context).size.width,
-            constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-            decoration: BoxDecoration( 
-              color: Colors.white,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(40.0), topRight: Radius.circular(40.0)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Colors.black26, 
-                  blurRadius: 20.0, 
-                  spreadRadius: 2.0, 
-                  offset: Offset(1.0, 15.0)
-                ),
-              ]
-            ),
-            child: _getPersonas(context),
-          )
-        ],
-      )
-    );
-  }
-
-  Widget  _getPersonas(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 40.0),
-      child: ListView(
-        children: <Widget>[
+          SizedBox(height: 20.0),
           FutureBuilder(
             future: future,
             builder: (BuildContext context, AsyncSnapshot<List> snapshot){
@@ -78,7 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
       children: <Widget>[
         ListTile(
           leading: CircleAvatar(
-          backgroundColor: Colors.blue,
+          backgroundColor: Colors.transparent,
           backgroundImage: AssetImage('${persona.getImage()}'),
             radius: 25.0,
           ),
