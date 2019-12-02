@@ -110,7 +110,7 @@ TabController controller;
             tabs: <Widget>[
               Tab(icon: Icon(Icons.person)),
               Tab(icon: Icon(Icons.local_hospital)),
-              Tab(icon: Icon(Icons.accessible)),
+              Tab(icon: Icon(Icons.star)),
               Tab(icon: Icon(Icons.assignment))
             ],
           ),

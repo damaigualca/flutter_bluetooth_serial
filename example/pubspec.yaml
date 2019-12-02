@@ -19,7 +19,7 @@ dependencies:
   basic_utils: ^2.3.7
   flutter_typeahead: ^1.7.0
   image_picker: ^0.6.2+1
-
+  flutter_launcher_icons: "^0.7.3"
 
 dev_dependencies:
   flutter_test:
@@ -27,6 +27,11 @@ dev_dependencies:
 
   flutter_bluetooth_serial:
     path: ../
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/launcher/icon.png"
 
 flutter:
   uses-material-design: true

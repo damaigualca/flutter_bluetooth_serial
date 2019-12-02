@@ -13,6 +13,7 @@ class Terapia{
   int repeticionesFallidas;
   int personaId;
   Persona persona;
+  String tipoMotivacion;
 
   Terapia(
     this.fecha,
@@ -25,6 +26,7 @@ class Terapia{
     this.repeticionesFallidas,
     this.personaId,
     this.persona,
+    this.tipoMotivacion
   );
 
   Terapia.fromJson(Map<String, dynamic> json) {
@@ -56,13 +58,13 @@ class Terapia{
 
   getNameFromTerapiaType(){
     if (this.tipoTerapia == 'ESCALERA'){
-      return 'Terapia 1';
+      return 'Escalera';
     } else if(this.tipoTerapia == 'PIEZAS'){
-      return 'Terapia 2';
+      return 'Completa las piezas';
     } else if(this.tipoTerapia == 'RECORRIDO') {
-      return 'Terapia 3';
+      return 'Laberinto';
     } else if(this.tipoTerapia == 'FOCOS'){
-      return 'Terapia 4';
+      return 'Tareas cotidianas';
     } else {
       return 'Otro';
     }
