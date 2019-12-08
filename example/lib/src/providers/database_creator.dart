@@ -71,6 +71,16 @@ class DataBaseCreator{
   static const repeticionesCorrectas = "repeticiones_correctas";
   static const repeticionesFallidas = "repeticiones_fallidas";
 
+  //Cancion
+  static const cancionTable = "CANCIONES";
+  static const preferenciaMusicaTable = "PREFERENCIAS_MUSICALES";
+  static const codigoArduino = "codigo_arduino";
+  static const cancionId = "id_cancion";
+
+  //Categoria
+  static const categoriaTable = "CATEGORIAS";
+  static const preferenciaMultimedialTable = "PREFERENCIAS_MULTIMEDIALES";
+  static const categoriaId = "id_categoria";
 
 
   static void databaseLog(String functionName, String sql,
@@ -92,7 +102,7 @@ class DataBaseCreator{
     var exists = await databaseExists(path);
     if (!exists){
       // Deberia pasar solo la primera vez que lances tu aplicacion
-      print("Creando una nueva copia de asset");
+      print("Creando una nueva copia desde asset");
       try {
         await Directory(dirname(path)).create(recursive: true);
       } catch (_) {
@@ -106,7 +116,7 @@ class DataBaseCreator{
     } else{
       print("Abriendo db existente");
     }
-    db = await openDatabase(path, version: 5);
+    db = await openDatabase(path, version: 6);
     print(db);
   }
 }

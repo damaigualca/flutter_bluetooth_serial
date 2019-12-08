@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/persona.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/resource_parameter.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/terapia.dart';
+import 'package:flutter_bluetooth_serial_example/src/pages/hero_photo_view.dart';
 import 'package:photo_view/photo_view.dart';
 class TerapiaPage extends StatefulWidget {
   TerapiaPage({Key key}) : super(key: key);
@@ -58,12 +59,13 @@ class _TerapiaPageState extends State<TerapiaPage> {
     totalTerapias = _countTerapias();
 
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          _showResumeLayer(),
-          (resourceParameter != null) ? _showImageLayer() : _showVideoLayer(),
-        ],
-      )
+      body: _showResumeLayer(),
+      // body: Stack(
+      //   children: <Widget>[
+      //     _showResumeLayer(),
+      //     (resourceParameter != null) ? _showImageLayer() : _showVideoLayer(),
+      //   ],
+      // )
     );
   }
 
@@ -88,24 +90,14 @@ class _TerapiaPageState extends State<TerapiaPage> {
   Widget _showImageLayer(){
     return Container(
       child: Opacity(
-        opacity: 0.3,
-              child: PhotoView(
-          imageProvider: FileImage(
-            resourceParameter.image
-          )
+        opacity: 1,
+          child: PhotoView(
+            imageProvider: FileImage(
+              resourceParameter.image
+            )
         ),
       )
     );
-    // return Opacity(
-    //   opacity: 1,
-    //   child: Image.file(
-    //     resourceParameter.image,
-    //     fit: BoxFit.cover,
-    //     height: double.infinity,
-    //     width: double.infinity,
-    //     alignment: Alignment.center,
-    //   ),
-    // );
   }
 
   Widget _showVideoLayer(){
@@ -201,6 +193,31 @@ class _TerapiaPageState extends State<TerapiaPage> {
               ],
             ),
           ),
+          (resourceParameter.image != null) ? 
+          ListTile(
+            leading: Hero(
+              tag: 'image',
+              child: CircleAvatar(
+                backgroundColor: Colors.blue,
+                backgroundImage: FileImage(resourceParameter.image),
+                  radius: 25.0,
+                ),
+            ),
+            title: Text('Imagen seleccionada'),
+            subtitle: Text('Presione el botón ver imagen'),
+            trailing: FlatButton(
+              child: Text('Ver imagen', style: TextStyle(color: Colors.blue, fontSize: 12.0),),
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => HeroPhotoViewWrapper(
+                    imageProvider: FileImage(resourceParameter.image)
+                  )
+                ));
+              },
+            ),
+            onTap: (){}
+          ) : Container(),
+          Divider(),
           ListTile(
             leading: CircleAvatar(
             backgroundColor: Colors.blue,

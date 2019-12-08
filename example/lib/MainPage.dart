@@ -83,7 +83,7 @@ class _MainPage extends State<MainPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Icon(Icons.bubble_chart, color: currentTab == 1 ? Colors.blue : Colors.grey,),
+                        Icon(Icons.pie_chart, color: currentTab == 1 ? Colors.blue : Colors.grey,),
                       ],
                     ),
                   )

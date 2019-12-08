@@ -73,6 +73,36 @@ CREATE TABLE "TERAPIAS" (
 	FOREIGN KEY("id_persona") REFERENCES "PERSONAS"("id")
 );
 
+CREATE TABLE "CANCIONES" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"nombre"	TEXT,
+	"artista"	TEXT,
+	"imagen"	TEXT,
+	"codigo_arduino"	TEXT
+);
+
+CREATE TABLE "PREFERENCIAS_MUSICALES" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"id_persona"	INTEGER,
+	"id_cancion"	INTEGER,
+	FOREIGN KEY("id_persona") REFERENCES "PERSONAS"("id"),
+	FOREIGN KEY("id_cancion") REFERENCES "CANCIONES"("id")
+);
+
+CREATE TABLE "CATEGORIAS" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"nombre"	TEXT,
+	"imagen"	TEXT
+);
+
+CREATE TABLE "PREFERENCIAS_MULTIMEDIALES" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	"id_persona"	INTEGER,
+	"id_categoria"	INTEGER,
+	FOREIGN KEY("id_persona") REFERENCES "PERSONAS"("id"),
+	FOREIGN KEY("id_categoria") REFERENCES "CATEGORIAS"("id")
+);
+
 INSERT INTO ENFERMEDADES(nombre) VALUES ('Artritis');
 INSERT INTO ENFERMEDADES(nombre) VALUES ('Artrosis');
 INSERT INTO ENFERMEDADES(nombre) VALUES ('Tendinitis');
@@ -266,3 +296,25 @@ INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_pe
 INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 4, 36);
 INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 2, 38);
 INSERT INTO DISCAPACIDAD_PERSONA(porcentaje, descripcion, id_discapacidad, id_persona) VALUES (10.0, '', 5, 38);
+
+
+INSERT INTO CANCIONES(nombre, artista, imagen, codigo_arduino) VALUES ('El alma en los labios', 'Julio Jaramillo', '', '1');
+INSERT INTO CANCIONES(nombre, artista, imagen, codigo_arduino) VALUES ('Nuestro juramento', 'Julio Jaramillo', '', '2');
+
+INSERT INTO CATEGORIAS(nombre, imagen) VALUES ('Animales', '');
+INSERT INTO CATEGORIAS(nombre, imagen) VALUES ('Paisajes', '');
+INSERT INTO CATEGORIAS(nombre, imagen) VALUES ('Ciudades', '');
+INSERT INTO CATEGORIAS(nombre, imagen) VALUES ('Comida', '');
+INSERT INTO CATEGORIAS(nombre, imagen) VALUES ('Musicales', '');
+INSERT INTO CATEGORIAS(nombre, imagen) VALUES ('Comedia', '');
+INSERT INTO CATEGORIAS(nombre, imagen) VALUES ('Volcanes', '');
+INSERT INTO CATEGORIAS(nombre, imagen) VALUES ('Artistas', '');
+
+
+INSERT INTO PREFERENCIAS_MUSICALES(id_persona, id_cancion) VALUES (1, 1);
+INSERT INTO PREFERENCIAS_MUSICALES(id_persona, id_cancion) VALUES (1, 2);
+
+INSERT INTO PREFERENCIAS_MULTIMEDIALES(id_persona, id_categoria) VALUES (1, 1);
+INSERT INTO PREFERENCIAS_MULTIMEDIALES(id_persona, id_categoria) VALUES (1, 2);
+INSERT INTO PREFERENCIAS_MULTIMEDIALES(id_persona, id_categoria) VALUES (2, 2);
+INSERT INTO PREFERENCIAS_MULTIMEDIALES(id_persona, id_categoria) VALUES (2, 5);
