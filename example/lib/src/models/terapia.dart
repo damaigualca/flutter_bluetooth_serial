@@ -13,7 +13,6 @@ class Terapia{
   int repeticionesFallidas;
   int personaId;
   Persona persona;
-  String tipoMotivacion;
 
   Terapia(
     this.fecha,
@@ -25,8 +24,7 @@ class Terapia{
     this.repeticionesCorrectas,
     this.repeticionesFallidas,
     this.personaId,
-    this.persona,
-    this.tipoMotivacion
+    this.persona
   );
 
   Terapia.fromJson(Map<String, dynamic> json) {

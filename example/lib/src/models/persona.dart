@@ -1,4 +1,3 @@
-import 'package:flutter_bluetooth_serial_example/src/models/unidad_atencion.dart';
 import 'package:flutter_bluetooth_serial_example/src/providers/database_creator.dart';
 
 class Persona{

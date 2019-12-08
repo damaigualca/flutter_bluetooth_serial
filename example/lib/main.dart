@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial_example/src/pages/create_terapia_page.dart';
+import 'package:flutter_bluetooth_serial_example/src/pages/motivational_type_page.dart';
 import 'package:flutter_bluetooth_serial_example/src/pages/profiles_detail_page.dart';
 import 'package:flutter_bluetooth_serial_example/src/pages/terapia_page.dart';
 import 'package:flutter_bluetooth_serial_example/src/providers/database_creator.dart';
@@ -35,6 +36,7 @@ class ExampleApplication extends StatelessWidget {
       routes: {
         'perfil_detalle': (BuildContext context) => ProfileDetail(),
         'terapia': (BuildContext context) => TerapiaPage(),
+        'motivational_type': (BuildContext context) => MotivationalTypePage(),
         'nueva_terapia': (BuildContext context) => CreateTerapiaPage()
       },
     );

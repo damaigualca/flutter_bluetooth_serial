@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/persona.dart';
+import 'package:flutter_bluetooth_serial_example/src/models/resource_parameter.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/terapia.dart';
+import 'package:photo_view/photo_view.dart';
 class TerapiaPage extends StatefulWidget {
   TerapiaPage({Key key}) : super(key: key);
 
@@ -11,6 +14,9 @@ class TerapiaPage extends StatefulWidget {
 }
 
 class _TerapiaPageState extends State<TerapiaPage> {
+  ResourceParameter resourceParameter;
+  List<Terapia> terapias;
+  int terapiaPosActual;
   Stopwatch watch = Stopwatch();
   Timer timer;
   bool detenido = false;
@@ -21,7 +27,6 @@ class _TerapiaPageState extends State<TerapiaPage> {
   int intentosFallidos = 0;
   Persona personaSelected;
   Terapia terapiaSelected;
-  int posicionActualListaTerapias = 0;
   String observaciones = '';
   int totalTerapias;
 
@@ -45,27 +50,69 @@ class _TerapiaPageState extends State<TerapiaPage> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Terapia> terapias = ModalRoute.of(context).settings.arguments;
+    resourceParameter = ModalRoute.of(context).settings.arguments;
+    terapias = resourceParameter.terapias;
+    terapiaPosActual = resourceParameter.terapiaPosActual;
     personaSelected = terapias[0].persona;
-    terapiaSelected = terapias[posicionActualListaTerapias];
-    totalTerapias = _countTerapias(terapias);
+    terapiaSelected = terapias[terapiaPosActual];
+    totalTerapias = _countTerapias();
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          _createAppbar(terapias),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                _createIntentos(),
-              ]
-            ),
-          ),
-          SliverFillRemaining(
-            child: _createBodyInfo(),
-          )
+      body: Stack(
+        children: <Widget>[
+          _showResumeLayer(),
+          (resourceParameter != null) ? _showImageLayer() : _showVideoLayer(),
         ],
-      ),
+      )
+    );
+  }
+
+  Widget _showResumeLayer(){
+    return CustomScrollView(
+      slivers: <Widget>[
+        _createAppbar(terapias),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              _createIntentos(),
+            ]
+          ),
+        ),
+        SliverFillRemaining(
+          child: _createBodyInfo(),
+        )
+      ],
+    );
+  }
+
+  Widget _showImageLayer(){
+    return Container(
+      child: Opacity(
+        opacity: 0.3,
+              child: PhotoView(
+          imageProvider: FileImage(
+            resourceParameter.image
+          )
+        ),
+      )
+    );
+    // return Opacity(
+    //   opacity: 1,
+    //   child: Image.file(
+    //     resourceParameter.image,
+    //     fit: BoxFit.cover,
+    //     height: double.infinity,
+    //     width: double.infinity,
+    //     alignment: Alignment.center,
+    //   ),
+    // );
+  }
+
+  Widget _showVideoLayer(){
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: Colors.red,
     );
   }
 
@@ -162,7 +209,7 @@ class _TerapiaPageState extends State<TerapiaPage> {
             ),
             title: Text('Terapia en curso'),
             subtitle: Text('${terapiaSelected.getNameFromTerapiaType()}'),
-            trailing: Text('${(posicionActualListaTerapias+1).toString()}' + '/' + totalTerapias.toString()),
+            trailing: Text('${(terapiaPosActual+1).toString()}' + '/' + totalTerapias.toString()),
             onTap: (){}
           ),
           Divider(),
@@ -250,9 +297,9 @@ class _TerapiaPageState extends State<TerapiaPage> {
     return '$minutessStr:$secondsStr';
   }
 
-  int _countTerapias(List<Terapia> t){
+  int _countTerapias(){
     int contador = 0;
-    t.forEach((f) => {
+    terapias.forEach((f) => {
       contador = contador + 1
     });
     return contador;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/persona.dart';
+import 'package:flutter_bluetooth_serial_example/src/models/resource_parameter.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/terapia.dart';
 import 'package:flutter_bluetooth_serial_example/src/services/persona_service.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -30,26 +31,10 @@ class _CreateTerapiaPageState extends State<CreateTerapiaPage> {
     'FOCOS': 1.0
   };
 
-  Map<String, int> selectedRadioGroup = {
-    'ESCALERA': -1,
-    'PIEZAS': -1,
-    'RECORRIDO': -1,
-    'FOCOS': -1
-  };
 
   @override
   void initState() {
     super.initState();
-    selectedRadioGroup['ESCALERA'] = 1;
-    selectedRadioGroup['PIEZAS'] = 1;
-    selectedRadioGroup['RECORRIDO'] = 1;
-    selectedRadioGroup['FOCOS'] = 1;
-  }
-
-  setSelectedRadio(int val, String nombreTerapia){
-    setState(() {
-      selectedRadioGroup[nombreTerapia] = val;
-    });
   }
 
   @override
@@ -153,8 +138,6 @@ class _CreateTerapiaPageState extends State<CreateTerapiaPage> {
               SizedBox(width: 10.0),
               _createImageTerapia('escalera.jpg'),
               SizedBox(width: 10.0),
-              _createOptionsRadioButton('ESCALERA'),
-              SizedBox(width: 10.0),
               _createSliderTerapias('Escalera', 'ESCALERA'),
             ],
           ),
@@ -164,8 +147,6 @@ class _CreateTerapiaPageState extends State<CreateTerapiaPage> {
               _createCheckbox('PIEZAS'),
               SizedBox(width: 10.0),
               _createImageTerapia('piezas.jpg'),
-              SizedBox(width: 10.0),
-              _createOptionsRadioButton('PIEZAS'),
               SizedBox(width: 10.0),
               _createSliderTerapias('Completa las piezas', 'PIEZAS'),
             ],
@@ -177,8 +158,6 @@ class _CreateTerapiaPageState extends State<CreateTerapiaPage> {
               SizedBox(width: 10.0),
               _createImageTerapia('recorrido.jpg'),
               SizedBox(width: 10.0),
-              _createOptionsRadioButton('RECORRIDO'),
-              SizedBox(width: 10.0),
               _createSliderTerapias('Laberito', 'RECORRIDO'),
             ],
           ),
@@ -188,8 +167,6 @@ class _CreateTerapiaPageState extends State<CreateTerapiaPage> {
               _createCheckbox('FOCOS'),
               SizedBox(width: 10.0),
               _createImageTerapia('focos.jpg'),
-              SizedBox(width: 10.0),
-              _createOptionsRadioButton('FOCOS'),
               SizedBox(width: 10.0),
               _createSliderTerapias('Tareas cotidianas', 'FOCOS'),
             ],
@@ -217,45 +194,6 @@ class _CreateTerapiaPageState extends State<CreateTerapiaPage> {
         image: AssetImage('assets/images/$nombreImagen'),
         height: 100.0,
       ),
-    );
-  }
-
-  Widget _createOptionsRadioButton(String nombreTerapia) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Radio(
-              value: 1,
-              groupValue: selectedRadioGroup[nombreTerapia],
-              onChanged: (value){
-                setSelectedRadio(value, nombreTerapia);
-              },
-            ),
-            Text(
-              'Audio',
-              style: new TextStyle(fontSize: 12.0),
-            ),
-          ],
-        ),
-        Row(
-          children: <Widget>[
-            Radio(
-              value: 0,
-              groupValue: selectedRadioGroup[nombreTerapia],
-              onChanged: (value){
-                setSelectedRadio(value, nombreTerapia);
-              },
-            ),
-            Text(
-              'Video',
-              style: new TextStyle(fontSize: 12.0),
-            ),
-          ],
-        ),
-      ],
     );
   }
 
@@ -293,13 +231,13 @@ class _CreateTerapiaPageState extends State<CreateTerapiaPage> {
   Widget _createStartTerapiaButton(){
     return FloatingActionButton.extended(
       onPressed: (personaSelected == null || !_verifyExistOneTerapiaSelected()) ? (null) : (){
-        Navigator.pushNamed(context, 'terapia', arguments: _buildTerapias());
+        Navigator.pushNamed(context, 'motivational_type', arguments: _buildTerapias());
       },
       backgroundColor: (personaSelected == null || !_verifyExistOneTerapiaSelected())
           ? (Colors.grey) : Colors.blue,
-      label: Text('Iniciar'),
+      label: Text('Siguiente'),
       icon: Icon(
-        Icons.play_circle_filled,
+        Icons.navigate_next,
       ),
     );
   }
@@ -314,21 +252,15 @@ class _CreateTerapiaPageState extends State<CreateTerapiaPage> {
     return exist;
   }
 
-  List<Terapia> _buildTerapias(){
+  ResourceParameter _buildTerapias(){
     List<Terapia> listNuevasTerapias = new List<Terapia>();
     DateTime currentDate = DateTime.now();
     String fechaCreacion = currentDate.year.toString() + '-' + currentDate.month.toString() + '-' + currentDate.day.toString();
     int repeticiones = 1;
-    String motivacion = 'AUDIO';
     terapias.forEach((k, v) {
       repeticionesTerapia.forEach((clave, valor){
         if (clave == k){
           repeticiones = valor.round();
-        }
-      });
-      selectedRadioGroup.forEach((c, v) {
-        if (c == k){
-          motivacion = (v == 1) ? 'AUDIO' : 'VIDEO';
         }
       });
       if (v){
@@ -342,11 +274,16 @@ class _CreateTerapiaPageState extends State<CreateTerapiaPage> {
             0,
             0,
             personaSelected.id,
-            personaSelected,
-            motivacion)
+            personaSelected)
         );
       }
     });
-    return listNuevasTerapias;
+    ResourceParameter resourceParameter = new ResourceParameter(
+      0, 
+      listNuevasTerapias, 
+      null, 
+      null
+    );
+    return resourceParameter;
   }
 }
