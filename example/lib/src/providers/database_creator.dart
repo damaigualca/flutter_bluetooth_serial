@@ -76,6 +76,7 @@ class DataBaseCreator{
   static const preferenciaMusicaTable = "PREFERENCIAS_MUSICALES";
   static const codigoArduino = "codigo_arduino";
   static const cancionId = "id_cancion";
+  static const artista = "artista";
 
   //Categoria
   static const categoriaTable = "CATEGORIAS";

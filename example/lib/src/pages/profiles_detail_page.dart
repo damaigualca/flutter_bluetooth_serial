@@ -3,8 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/discapacidad_persona.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/enfermedad_persona.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/persona.dart';
+import 'package:flutter_bluetooth_serial_example/src/models/preferencia_multimedia.dart';
+import 'package:flutter_bluetooth_serial_example/src/models/preferencia_musica.dart';
+import 'package:flutter_bluetooth_serial_example/src/models/terapia.dart';
 import 'package:flutter_bluetooth_serial_example/src/services/discapacidad_persona.dart';
 import 'package:flutter_bluetooth_serial_example/src/services/enfermedad_persona_service.dart';
+import 'package:flutter_bluetooth_serial_example/src/services/preferencia_multimedia_service.dart';
+import 'package:flutter_bluetooth_serial_example/src/services/preferencia_musica_service.dart';
+import 'package:flutter_bluetooth_serial_example/src/services/terapia_service.dart';
+import 'package:flutter_bluetooth_serial_example/src/utils/image_save_utility.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class ProfileDetail extends StatefulWidget {
@@ -24,7 +32,11 @@ class _ProfileDetailState extends State<ProfileDetail> with SingleTickerProvider
   TextEditingController fechaNacimientoIController = new TextEditingController();
   Future<List<EnfermedadPersona>> futureEnfermedad;
   Future<List<DiscapacidadPersona>> futureDiscapacidad;
-TabController controller;
+  Future<List<Terapia>> futureTerapia;
+  Future<List<PreferenciaMusica>> futurePreferenciaMusica;
+  Future<List<PreferenciaMultimedia>> futurePreferenciaMultimedia;
+  TabController controller;
+
   @override
   void initState() { 
     super.initState();
@@ -56,7 +68,9 @@ TabController controller;
     fechaNacimientoIController.text = personaSelected.fechaNacimiento;
     futureEnfermedad = EnfermedadPersonaService.getAll(personaSelected.id);
     futureDiscapacidad = DiscapacidadPersonaService.getAll(personaSelected.id);
-
+    futureTerapia = TerapiaService.findByPaciente(personaSelected.id);
+    futurePreferenciaMusica = PreferenciaMusicaService.findByPersona(personaSelected.id);
+    futurePreferenciaMultimedia = PreferenciaMultimediaService.findByPaciente(personaSelected.id);
     return Scaffold(
       body: CustomScrollView(
         slivers: <Widget>[
@@ -133,17 +147,15 @@ TabController controller;
           padding: EdgeInsets.all(20.0),
           child: _showEnfermedadesDiscapacidades(),
         ),
-        ListView(
+        SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.all(20.0),
-          children: <Widget>[
-            _createTitleDiscapacidades(),
-          ],
+          child: _showPreferencias()
         ),
-        ListView(
-          padding: EdgeInsets.only(top: 30.0, left: 20.0),
-          children: <Widget>[
-            _createTitleTerapias(),
-          ],
+        SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.all(20.0),
+          child: _showTerapias()
         )
       ],
     );
@@ -205,14 +217,12 @@ TabController controller;
               columns: [
                 DataColumn(label: Text('Enfermedad')),
                 DataColumn(label: Text('Nivel')),
-                DataColumn(label: Text('Tratamiento')),
               ],
               rows: snapshot.data
                 .map((ep) => DataRow(
                   cells: [
                     DataCell(Text(ep.nombre)),
                     DataCell(Text(ep.nivelEnfermedad)),
-                    DataCell(Text(ep.tipoTratamiento)),
                   ]
                 )).toList()
             ),
@@ -234,14 +244,113 @@ TabController controller;
               columns: [
                 DataColumn(label: Text('Discapacidad')),
                 DataColumn(label: Text('Porcentaje')),
-                DataColumn(label: Text('Descripción')),
               ],
               rows: snapshot.data
                 .map((dp) => DataRow(
                   cells: [
                     DataCell(Text(dp.nombre)),
                     DataCell(Text('${dp.porcentaje.round().toString()} %')),
-                    DataCell(Text(dp.descripcion)),
+                  ]
+                )).toList()
+            ),
+          );
+        }else{
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+  Widget _showPreferencias(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _createTitlePreferenciasMusicales(),
+        _buildPreferenciasMusicales(),
+        SizedBox(height: 20.0),
+        _createTitlePreferenciasMultimediales(),
+        _buildPreferenciasMultimediales()
+      ],
+    );
+  }
+
+  Widget _buildPreferenciasMusicales(){
+    return FutureBuilder(
+      future: futurePreferenciaMusica,
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        if(snapshot.hasData){
+          print(snapshot.data);
+          return Column(
+            children: snapshot.data.map((todo) => _construirItemList(todo)).toList(),
+          );
+        }else{
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+  Widget _buildPreferenciasMultimediales(){
+    return FutureBuilder(
+      future: futurePreferenciaMultimedia,
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        if(snapshot.hasData){
+          print(snapshot.data);
+          return Column(
+            children: snapshot.data.map((todo) => _construirPreferenciasMultimediales(todo)).toList(),
+          );
+        }else{
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+  Widget _construirItemList(PreferenciaMusica preferenciaMusica){
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.all(20.0),
+      child: Text(preferenciaMusica.nombre + ' - ' + preferenciaMusica.artista, style: TextStyle(fontSize: 20.0),),
+    );
+  }
+
+  Widget _construirPreferenciasMultimediales(PreferenciaMultimedia preferenciaMultimedia){
+    return Container(
+      padding: EdgeInsets.all(20.0),
+      alignment: Alignment.center,
+      child: Text(preferenciaMultimedia.nombre, style: TextStyle(fontSize: 20.0)),
+    );
+  }
+
+  Widget _showTerapias(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        _createTitleTerapias(),
+        _buildTerapias(),
+        SizedBox(height: 20.0)
+      ],
+    );
+  }
+
+  Widget _buildTerapias(){
+    return FutureBuilder(
+      future: futureTerapia,
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        if(snapshot.hasData){
+          return SingleChildScrollView(
+            child: DataTable(
+              columns: [
+                DataColumn(label: Text('Fecha')),
+                DataColumn(label: Text('Tipo terapia')),
+                DataColumn(label: Text('Observaciones')),
+              ],
+              rows: snapshot.data
+                .map((dp) => DataRow(
+                  cells: [
+                    DataCell(Text(dp.fecha)),
+                    DataCell(Text('${dp.getNameFromTerapiaType()}')),
+                    DataCell(Text(dp.observaciones))
                   ]
                 )).toList()
             ),
@@ -535,7 +644,7 @@ TabController controller;
       children: <Widget>[
         Text('Discapacidades',style: estiloTitulo),
         IconButton(
-          icon: (editable) ? Icon(Icons.mode_edit, color: Colors.blue): Icon(Icons.edit, color: Colors.black),
+          icon: Icon(Icons.add),
           tooltip: 'Editar',
           onPressed: (){
             // setState(() {
@@ -556,7 +665,63 @@ TabController controller;
       children: <Widget>[
         Text('Lista de terapias completadas',style: estiloTitulo),
         SizedBox(width: 50.0),
+        IconButton(
+          icon: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            backgroundImage: AssetImage('assets/images/excel-icon.png'),
+              radius: 25.0,
+          ),
+          tooltip: 'Editar',
+          onPressed: (){
+            // setState(() {
+            //   if (editable){
+            //     editable = false;
+            //   }else{
+            //     editable = true;
+            //   }
+            // });
+          },
+        )
       ],
     );
+  }
+
+  Widget _createTitlePreferenciasMusicales(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text('Preferencias musicales',style: estiloTitulo),
+        IconButton(
+          icon: Icon(Icons.add),
+          tooltip: 'Agregar',
+          onPressed: (){
+            pickImageFromGallery();
+          },
+        )
+      ],
+    );
+  }
+
+  Widget _createTitlePreferenciasMultimediales(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text('Preferencias multimediales',style: estiloTitulo),
+        IconButton(
+          icon: Icon(Icons.add),
+          tooltip: 'Agregar',
+          onPressed: (){
+            pickImageFromGallery();
+          },
+        )
+      ],
+    );
+  }
+
+  pickImageFromGallery() {
+    ImagePicker.pickImage(source: ImageSource.gallery).then((imgFile) {
+      String imgString = Utility.base64String(imgFile.readAsBytesSync());
+      print(imgString);
+    });
   }
 }

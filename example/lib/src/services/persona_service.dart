@@ -17,7 +17,7 @@ class PersonaService {
 
   static Future<List<Persona>> findByNombre(String query) async {
     query = "'%" + query + "%'";
-    final sql = 'SELECT * FROM ${DataBaseCreator.personaTable} WHERE (nombres LIKE $query OR apellidos LIKE $query);';
+    final sql = 'SELECT * FROM ${DataBaseCreator.personaTable} WHERE (nombres LIKE $query);';
     final data = await db.rawQuery(sql);
     List<Persona> personas = List();
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +7,10 @@ import 'package:flutter_bluetooth_serial_example/src/models/persona.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/resource_parameter.dart';
 import 'package:flutter_bluetooth_serial_example/src/models/terapia.dart';
 import 'package:flutter_bluetooth_serial_example/src/pages/hero_photo_view.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:intl/intl.dart';
+
 class TerapiaPage extends StatefulWidget {
   TerapiaPage({Key key}) : super(key: key);
 
@@ -28,8 +32,9 @@ class _TerapiaPageState extends State<TerapiaPage> {
   int intentosFallidos = 0;
   Persona personaSelected;
   Terapia terapiaSelected;
-  String observaciones = '';
   int totalTerapias;
+  ResourceParameter resource;
+  String observaciones = 'Ninguna';
 
   void updateTime(Timer timer){
     if (!mounted) return;
@@ -60,12 +65,49 @@ class _TerapiaPageState extends State<TerapiaPage> {
 
     return Scaffold(
       body: _showResumeLayer(),
-      // body: Stack(
-      //   children: <Widget>[
-      //     _showResumeLayer(),
-      //     (resourceParameter != null) ? _showImageLayer() : _showVideoLayer(),
-      //   ],
-      // )
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.remove),
+            label: "+1 Fallido",
+            backgroundColor: Colors.red,
+            onTap: () {
+              setState(() {
+                intentosFallidos = intentosFallidos + 1;
+                intentos = intentos + 1;
+              });
+            }
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.check),
+            label: "+1 Correcto",
+            backgroundColor: Colors.green,
+            onTap: () {
+              setState(() {
+                intentoCorrectos = intentoCorrectos + 1;
+                intentos = intentos + 1;
+                if(intentoCorrectos == terapiaSelected.repeticionesAsignadas){
+                  stopWatch();
+                  terapias[terapiaPosActual].completado = true;
+                  terapias[terapiaPosActual].fecha = DateFormat('yyyy-MM-dd').format(DateTime.now());
+                  terapias[terapiaPosActual].repeticionesCorrectas = intentoCorrectos;
+                  terapias[terapiaPosActual].repeticionesFallidas = intentosFallidos;
+                  terapias[terapiaPosActual].tiempoEmpleado = elapsedTime;
+                  terapias[terapiaPosActual].observaciones = observaciones;
+                  resource = ResourceParameter(terapiaPosActual + 1, terapias, resourceParameter.image, resourceParameter.videoPlayerController);
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => HeroPhotoViewWrapper(
+                      imageProvider: FileImage(resourceParameter.image),
+                      resourceParameter: resource,
+                    )
+                  ));
+                }
+              });
+            }
+          ),
+        ],
+      ),
     );
   }
 
@@ -132,6 +174,18 @@ class _TerapiaPageState extends State<TerapiaPage> {
       ),
       actions: <Widget>[
         IconButton(
+          icon: Icon(Icons.refresh, color: Colors.blue),
+          tooltip: 'Reiniciar',
+          onPressed: (){
+            setState(() {
+              resetWatch();
+              intentoCorrectos = 0;
+              intentosFallidos = 0;
+              intentos = 0;
+            });
+          },
+        ),
+        IconButton(
           icon: (!detenido) ? Icon(Icons.pause, color: Colors.blue): Icon(Icons.play_arrow, color: Colors.blue),
           tooltip: 'Pausar',
           onPressed: (){
@@ -183,6 +237,7 @@ class _TerapiaPageState extends State<TerapiaPage> {
       padding: EdgeInsets.only(right: 20.0, left: 20.0),
       color: Colors.white,
       child: ListView(
+        physics: NeverScrollableScrollPhysics(),
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(bottom: 40.0),
@@ -203,18 +258,8 @@ class _TerapiaPageState extends State<TerapiaPage> {
                   radius: 25.0,
                 ),
             ),
-            title: Text('Imagen seleccionada'),
-            subtitle: Text('Presione el botón ver imagen'),
-            trailing: FlatButton(
-              child: Text('Ver imagen', style: TextStyle(color: Colors.blue, fontSize: 12.0),),
-              onPressed: (){
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => HeroPhotoViewWrapper(
-                    imageProvider: FileImage(resourceParameter.image)
-                  )
-                ));
-              },
-            ),
+            title: Text('Recurso motivacional'),
+            subtitle: (resourceParameter.image != null) ? Text('Imagen') : Text('Video'),
             onTap: (){}
           ) : Container(),
           Divider(),
@@ -254,28 +299,21 @@ class _TerapiaPageState extends State<TerapiaPage> {
               fillColor: Colors.white,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
-              
               )
             ),
             onChanged: (valor){
               observaciones = valor;
             },
           ),
-          Divider(height: 40.0, thickness: 0.0, color: Colors.white,),
-          ButtonBar(
-            alignment: MainAxisAlignment.center,
-            children: <Widget>[
-              RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)
-                ),
-                child: Text('Reiniciar', style: TextStyle(fontSize: 15.0),),
-              ),
-              RaisedButton(
-                child: Text('Finalizar', style: TextStyle(fontSize: 15.0)),
-              ),
-            ],
-          )
+          // Divider(),
+          // RaisedButton(
+          //   shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.circular(10.0),
+          //   ),
+          //   color: Colors.blue,
+          //   child: Text('Continuar', style: TextStyle(fontSize: 15.0, color: Colors.white),),
+          //   onPressed: (){},
+          // ) TODO Este boton se usa para continuar si el usuario regresa
         ],
       ),
     );
@@ -321,4 +359,5 @@ class _TerapiaPageState extends State<TerapiaPage> {
     });
     return contador;
   }
+
 }

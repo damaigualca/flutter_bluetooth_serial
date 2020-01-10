@@ -35,7 +35,7 @@ class Terapia{
     this.observaciones = json[DataBaseCreator.observaciones];
     this.completado = json[DataBaseCreator.completado] == 1;
     this.tiempoEmpleado = json[DataBaseCreator.tiempoEmpleado];
-    this.repeticionesCorrectas = json[DataBaseCreator.fechaNacimiento];
+    this.repeticionesCorrectas = json[DataBaseCreator.repeticionesCorrectas];
     this.repeticionesFallidas = json[DataBaseCreator.repeticionesFallidas];
     this.personaId = json[DataBaseCreator.personaId];
   }

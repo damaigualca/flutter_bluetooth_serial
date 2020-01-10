@@ -8,6 +8,7 @@ class PreferenciaMultimedia{
   int idCategoria;
   Categoria categoria;
   Persona persona;
+  String nombre;
 
   PreferenciaMultimedia(
     this.id, 
@@ -19,5 +20,6 @@ class PreferenciaMultimedia{
     this.id = json[DataBaseCreator.id];
     this.idCategoria = json[DataBaseCreator.categoriaId];
     this.idPersona = json[DataBaseCreator.personaId];
+    this.nombre = json[DataBaseCreator.nombre];
   }
 }

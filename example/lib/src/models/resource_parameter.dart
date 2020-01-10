@@ -8,6 +8,7 @@ class ResourceParameter{
   List<Terapia> terapias;
   File image;
   VideoPlayerController videoPlayerController;
+  File video;
 
   ResourceParameter(
     this.terapiaPosActual,

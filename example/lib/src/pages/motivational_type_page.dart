@@ -260,7 +260,7 @@ class _MotivationalTypePageState extends State<MotivationalTypePage> {
         children: <Widget>[
           _getImage(),
           _createTitle('Terapia actual: ' + terapias[terapiaPosActual].getNameFromTerapiaType()),
-          _createSubtitle('Seleccione una imagen.'),
+          _createSubtitle('Presione el icono superior y elija una imagen.'),
         ],
       ),
     );
@@ -273,7 +273,7 @@ class _MotivationalTypePageState extends State<MotivationalTypePage> {
         children: <Widget>[
           _getVideo(),
           _createTitle('Terapia actual: ' + terapias[terapiaPosActual].getNameFromTerapiaType()),
-          _createSubtitle('Seleccione un video.')
+          _createSubtitle('Presione el icono superior y elija una video.')
         ],
       ),
     );

@@ -268,7 +268,7 @@ class _CreateTerapiaPageState extends State<CreateTerapiaPage> {
             fechaCreacion,
             k,
             repeticiones,
-            '',
+            'Ninguna',
             false,
             '',
             0,

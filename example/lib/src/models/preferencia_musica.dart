@@ -8,6 +8,9 @@ class PreferenciaMusica{
   int idCancion;
   Cancion cancion;
   Persona persona;
+  String imagen;
+  String nombre;
+  String artista;
 
   PreferenciaMusica(
     this.id, 
@@ -19,5 +22,8 @@ class PreferenciaMusica{
     this.id = json[DataBaseCreator.id];
     this.idCancion = json[DataBaseCreator.cancionId];
     this.idPersona = json[DataBaseCreator.personaId];
+    this.imagen = json[DataBaseCreator.imagen];
+    this.nombre = json[DataBaseCreator.nombre];
+    this.artista = json[DataBaseCreator.artista];
   }
 }
