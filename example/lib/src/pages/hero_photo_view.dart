@@ -59,6 +59,9 @@ class _HeroPhotoViewWrapperState extends State<HeroPhotoViewWrapper> {
         });
       } 
       : (){ // Si no es la ultima continuo con las demas listas
+        if(widget.resourceParameter.terapias[terapiaPosActual].completado){
+          saveTerapia(widget.resourceParameter.terapias[terapiaPosActual], context);
+        }
         Navigator.pushNamed(context, 'motivational_type', arguments: widget.resourceParameter);
       },
       backgroundColor: Colors.blue,
