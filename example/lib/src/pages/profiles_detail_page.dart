@@ -213,16 +213,23 @@ class _ProfileDetailState extends State<ProfileDetail> with SingleTickerProvider
       builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
         if(snapshot.hasData){
           return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: DataTable(
               columns: [
                 DataColumn(label: Text('Enfermedad')),
                 DataColumn(label: Text('Nivel')),
+                DataColumn(label: Text('Tratamiento')),
+                DataColumn(label: Text('Lugar atención')),
+                DataColumn(label: Text('Recomendación')),
               ],
               rows: snapshot.data
                 .map((ep) => DataRow(
                   cells: [
                     DataCell(Text(ep.nombre)),
                     DataCell(Text(ep.nivelEnfermedad)),
+                    DataCell(Text(ep.tipoTratamiento)),
+                    DataCell(Text(ep.lugarAtencion)),
+                    DataCell(Text(ep.recomendacion)),
                   ]
                 )).toList()
             ),
@@ -240,16 +247,19 @@ class _ProfileDetailState extends State<ProfileDetail> with SingleTickerProvider
       builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
         if(snapshot.hasData){
           return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: DataTable(
               columns: [
                 DataColumn(label: Text('Discapacidad')),
                 DataColumn(label: Text('Porcentaje')),
+                DataColumn(label: Text('Descripcion')),
               ],
               rows: snapshot.data
                 .map((dp) => DataRow(
                   cells: [
                     DataCell(Text(dp.nombre)),
                     DataCell(Text('${dp.porcentaje.round().toString()} %')),
+                    DataCell(Text(dp.descripcion)),
                   ]
                 )).toList()
             ),
@@ -339,17 +349,22 @@ class _ProfileDetailState extends State<ProfileDetail> with SingleTickerProvider
       builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
         if(snapshot.hasData){
           return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
             child: DataTable(
               columns: [
                 DataColumn(label: Text('Fecha')),
                 DataColumn(label: Text('Tipo terapia')),
-                DataColumn(label: Text('Observaciones')),
+                DataColumn(label: Text('RC')),
+                DataColumn(label: Text('RF')),
+                DataColumn(label: Text('Observacion')),
               ],
               rows: snapshot.data
                 .map((dp) => DataRow(
                   cells: [
                     DataCell(Text(dp.fecha)),
                     DataCell(Text('${dp.getNameFromTerapiaType()}')),
+                    DataCell(Text(dp.repeticionesCorrectas.toString())),
+                    DataCell(Text(dp.repeticionesFallidas.toString())),
                     DataCell(Text(dp.observaciones))
                   ]
                 )).toList()
@@ -622,7 +637,7 @@ class _ProfileDetailState extends State<ProfileDetail> with SingleTickerProvider
       children: <Widget>[
         Text('Enfermedades',style: estiloTitulo),
         IconButton(
-          icon: (editable) ? Icon(Icons.mode_edit, color: Colors.blue): Icon(Icons.edit, color: Colors.black),
+          icon: Icon(Icons.add),
           tooltip: 'Editar',
           onPressed: (){
             // setState(() {
